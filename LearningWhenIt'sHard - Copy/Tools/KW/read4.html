@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Velari Reading Tool 4</title>
+        <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico" />
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:500,700" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Muli:400,400i,800,800i" rel="stylesheet" type="text/css" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="css/styles.css" rel="stylesheet" />
+        
+
+    </head>
+    <body>
+
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-dark darkbg fixed-top" id="sideNav">
+         
+            <a class="navbar-brand js-scroll-trigger" href="#page-top">
+              
+                <span class="d-block d-lg-none"></span>
+                <span class="d-none d-lg-block"><img class="img-fluid img-profile rounded-circle mx-auto mb-2" src="../../characters/images/vorran1.png" alt="..." /></span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav">
+                    <li id="counter">Points: <div >0</div><a class="nav-link js-scroll-trigger" href="#about">It's Go Time</a></li>
+                    
+                </ul>
+            </div>
+        </nav>
+        <!-- Page Content-->
+        <div class="container-fluid p-0">
+           <a href="../../index.html">Home</a>
+            <!-- About-->
+            <section class="resume-section" id="about">
+                <div class="resume-section-content">
+                    <h1 class="mb-0">
+                        Vorran's 
+                        <span class="text-primary">Reading Tool</span>
+                    </h1>
+                    <div class="subheading mb-5">
+                        Step 1 - Use the word repeater to hear words<br>
+                        Step 2 - Listen to 50 words (Get 50 Points)<br>
+                        Step 3 - Read 15 sentences in the Sentence Box<br>
+                        Step 4 - Repeat for 30 days
+
+                        
+                    </div>
+                   
+                </div>
+            </section>
+            <hr class="m-0" />
+           
+            <hr class="m-0" />
+            <!-- Education-->
+            <section class="resume-section" id="wordRead" id="page-top" >
+     <div class="subheading mb-5">
+      <h1 class="mb-0">
+                        
+                        <span class="text-primary">The Word Repeater</span>
+                    </h1>
+                         
+</head>
+ 
+                        
+                    </div>
+                 <div>   
+    <button class="fun-button " id="hey" >Click Me!</button>
+                 </div>
+  <div id="wordBox">---<br><small>Click to hear!</small>
+  
+
+  
+
+
+            </section>
+            <hr class="m-0" />
+           
+            <hr class="m-0" />
+             <section class="resume-section" id="about">
+                <div class="resume-section-content">
+                    <h1 class="mb-0">
+                        
+                        <span class="text-primary">Sentence Box</span>
+                    </h1><br><br><br><br>
+                 
+                  
+                     <div class="sent1" id="wordBox2">  The car went fast </div>
+                     <div><br><br>
+                      <button class="fun-button" id="hey2" >Click Me!</button><br><br><br>
+                     </div>
+                 </div>
+                    
+                   
+                </div>
+            </section>
+            <hr class="m-0" />
+           
+    
+     <script>
+    const words = [    "honest", "wonder", "choose", "inside", "listen",
+    "bright", "simple", "follow", "center", "number",
+    "friend", "answer", "better", "moment", "reason",
+    "create", "belief", "change", "excite", "nature",
+    "travel", "learn", "caring", "effort", "future",
+    "helped", "shared", "asking", "finish", "artist",
+    "really", "strong", "school", "animal", "person",
+    "planet", "result", "silent", "safety", "modern",
+    "little", "object", "return", "action", "circle",
+    "family", "energy", "notice", "manage", "memory",
+    "motion", "choice", "pretty", "honor", "growth"
+
+
+
+
+
+
+
+];
+
+    const sent = [ "She gave an honest answer to the teacher.",
+    "We wonder what the bright object is in space.",
+    "I choose to follow my friend to the park.",
+    "The center of the circle is marked with red.",
+    "He listened inside the room for the silent sound.",
+    "We create art with simple tools and effort.",
+    "The animal showed caring behavior toward others.",
+    "I learned a better way to solve the problem.",
+    "This moment is full of change and growth.",
+    "The artist painted a pretty planet with motion.",
+    "She helped manage the return of each object.",
+    "They showed real honor during the school event."
+
+
+
+
+
+];
+
+let count = 0;
+const counterDiv = document.getElementById("counter");
+
+    function getRandomWord() {
+      return words[Math.floor(Math.random() * words.length)];
+    }
+
+    function speakWord(word) {
+      const utterance = new SpeechSynthesisUtterance(word);
+      speechSynthesis.speak(utterance);
+    }
+
+    const wordBox = document.getElementById("wordBox");
+   
+   window.addEventListener("DOMContentLoaded", () => {
+
+    function getRandomBetween5And30() {
+  return Math.floor(Math.random() * (30 - 5 + 1)) + 5;
+}
+
+let randomNum = getRandomBetween5And30();
+
+    hey.addEventListener("click", () => {
+      const word = getRandomWord();
+      wordBox.innerHTML = word;
+      count++;
+        counterDiv.textContent = count;
+        document.getElementById("hey").classList.toggle("newSpot");
+
+       if (count == randomNum ){
+
+            confetti({
+                shapes: ['text'],
+                 shapeOptions: {
+                 text: ['🎉', '💥', '✨']
+
+                    }
+            });
+       }
+
+        if (count > 49) {
+
+           alert("Good Job Katelyn");
+           document.getElementById("wordRead").classList.add("bGround");
+
+         confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+
+
+        }
+
+
+        console.log(randomNum);
+      speakWord(word);
+      
+    });
+
+});
+     function getRandomWord2() {
+      return sent[Math.floor(Math.random() * sent.length)];
+    }
+
+    
+
+    const wordBox2 = document.getElementById("wordBox2");
+   
+    hey2.addEventListener("click", () => {
+      const word2 = getRandomWord2();
+      wordBox2.innerHTML = word2;
+     
+      
+    });
+
+  
+ let moved = false;
+  function moveButton() {
+    const button = document.querySelector('.move-button');
+    if (!moved) {
+      button.style.left = '200px';  // move right
+      button.style.top = '100px';   // move down
+      button.style.position = 'absolute';
+    } else {
+      button.style.left = '0px';
+      button.style.top = '0px';
+    }
+    moved = !moved;
+  }
+
+
+
+  </script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+</html>

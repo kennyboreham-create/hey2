@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Counting Game</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #2e004d;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      padding: 20px;
+    }
+
+    #gameInfo {
+      width: 150px;
+    }
+
+    #gameArea {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #shapesContainer {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+      justify-content: center;
+    }
+
+    .shape {
+      width: 40px;
+      height: 40px;
+    }
+
+    .circle {
+      background-color: #ffcc00;
+      border-radius: 50%;
+    }
+
+    .square {
+      background-color: #00ccff;
+    }
+
+    #numberPanel {
+      width: 150px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .numberBtn {
+      width: 40px;
+      height: 40px;
+      background-color: #9933ff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    #message {
+      margin-top: 10px;
+      font-size: 18px;
+      color: #66ff66;
+    }
+
+    .triangle {
+  width: 0;
+  height: 0;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-bottom: 40px solid #ff6699;
+}
+
+.rectangle {
+  background-color: #66ff66;
+  width: 60px;
+  height: 30px;
+}
+  </style>
+</head>
+<body>
+  <div id="gameInfo">
+    <h3>Level: <span id="level">1</span></h3>
+    <h3>Points: <span id="points">0</span></h3>
+  </div>
+
+  <div id="gameArea">
+    <h1>Count the Shapes!</h1>
+    <div id="shapesContainer"></div>
+    <div id="message"></div>
+  </div>
+
+  <div id="numberPanel"></div>
+
+  <script>
+   let level = 1;
+let points = 0;
+let correctAnswer = 0;
+
+function generateShapes() {
+  const container = document.getElementById('shapesContainer');
+  container.innerHTML = '';
+
+  const maxPerShape = 5;
+  const shapeCounts = {
+    circle: Math.floor(Math.random() * maxPerShape + 1),
+    square: Math.floor(Math.random() * maxPerShape + 1),
+    triangle: Math.floor(Math.random() * maxPerShape + 1),
+    rectangle: Math.floor(Math.random() * maxPerShape + 1)
+  };
+
+  for (const [shape, count] of Object.entries(shapeCounts)) {
+    for (let i = 0; i < count; i++) {
+      const shapeDiv = document.createElement('div');
+      shapeDiv.className = `shape ${shape}`;
+      container.appendChild(shapeDiv);
+    }
+  }
+
+  const questionType = getRandomQuestionType();
+  correctAnswer = calculateAnswer(shapeCounts, questionType);
+  document.getElementById('message').textContent = questionType;
+}
+
+function getRandomQuestionType() {
+  const options = [
+    "How many circles are there?",
+    "How many squares and circles are there?",
+    "How many triangles and circles are there?",
+    "How many rectangles and squares are there?",
+    "Count all of the shapes."
+  ];
+  return options[Math.floor(Math.random() * options.length)];
+}
+
+function calculateAnswer(counts, question) {
+  if (question.includes("all")) {
+    return Object.values(counts).reduce((a, b) => a + b, 0);
+  }
+
+  let total = 0;
+  if (question.includes("circles")) total += counts.circle;
+  if (question.includes("squares")) total += counts.square;
+  if (question.includes("triangles")) total += counts.triangle;
+  if (question.includes("rectangles")) total += counts.rectangle;
+
+  return total;
+}
+
+function setupNumberPanel() {
+  const panel = document.getElementById('numberPanel');
+  panel.innerHTML = '';
+  for (let i = 1; i <= 20; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'numberBtn';
+    btn.textContent = i;
+    btn.onclick = () => checkAnswer(i);
+    panel.appendChild(btn);
+  }
+}
+
+function checkAnswer(selected) {
+  const message = document.getElementById('message');
+  if (selected === correctAnswer) {
+    points += 10;
+    level++;
+    message.textContent = "Correct! 🎉";
+  } else {
+    message.textContent = "Try again!";
+  }
+
+  document.getElementById('points').textContent = points;
+  document.getElementById('level').textContent = level <= 20 ? level : "🏆";
+
+  if (level <= 20) {
+    setTimeout(generateShapes, 1000);
+  } else {
+    message.textContent = "Game Over! You completed all levels!";
+  }
+}
+
+// Initialize game
+setupNumberPanel();
+generateShapes();
+  </script>
+</body>
+</html>

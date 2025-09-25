@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Bob's Calculator Tool</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      height: 100vh;
+      background-color: #f5f5f5;
+    }
+    h2 {
+      text-align: center;
+      position:absolute;
+      width: 100%;
+      padding: 20px 0;
+      
+    }
+
+    #container {
+      display: flex;
+      display: flex;
+   
+
+
+      justify-content: space-around;
+      align-items: center;
+      width: 100%;
+      padding: 40px;
+    }
+
+    #calculator {
+      width: 240px;
+      padding: 20px;
+      border: 2px solid #333;
+      border-radius: 10px;
+      background: linear-gradient(to bottom, #f0f0f0, #dcdcdc);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    #display {
+      width: 100%;
+      height: 40px;
+      font-size: 20px;
+      margin-bottom: 10px;
+      padding: 5px;
+      border: 1px solid #aaa;
+      border-radius: 5px;
+      background-color: #fff;
+      text-align: right;
+    }
+
+    #buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    button {
+      height: 40px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      background-color: #e0e0e0;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #c0c0c0;
+    }
+
+    button:active {
+      background-color: #a0a0a0;
+    }
+
+    button.clear {
+      background-color: #ff6666;
+      color: white;
+      font-weight: bold;
+      grid-column: span 4;
+    }
+
+    #equationDisplay {
+      width: 300px;
+    height: 150px;
+      font-size: 20px;
+      padding: 20px;
+      border-left: 2px solid #ccc;
+      color: #333;
+    }
+
+    #equationDisplay h2 {
+      margin-top: 0;
+    }
+
+    #equationText {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+   <h2>Bob's Calculator Tool</h2>
+  <div id="container">
+   
+    <div id="calculator">
+      <input type="text" id="display" disabled>
+      <div id="buttons">
+        <button onclick="append('7')">7</button>
+        <button onclick="append('8')">8</button>
+        <button onclick="append('9')">9</button>
+        <button onclick="append('/')">÷</button>
+
+        <button onclick="append('4')">4</button>
+        <button onclick="append('5')">5</button>
+        <button onclick="append('6')">6</button>
+        <button onclick="append('*')">×</button>
+
+        <button onclick="append('1')">1</button>
+        <button onclick="append('2')">2</button>
+        <button onclick="append('3')">3</button>
+        <button onclick="append('-')">−</button>
+
+        <button onclick="append('0')">0</button>
+        <button onclick="append('.')">.</button>
+        <button onclick="calculate()">=</button>
+        <button onclick="append('+')">+</button>
+
+        <button class="clear" onclick="clearDisplay()">Clear</button>
+      </div>
+    </div>
+
+    <div id="equationDisplay">
+      
+      <div id="equationText" style="font-size:x-large;">—</div>
+    </div>
+  </div>
+
+  <script>
+    let currentInput = '';
+
+function append(value) {
+  if (value === '*') {
+    currentInput += '*';
+    document.getElementById('display').value = currentInput.replace(/\*/g, '×');
+    document.getElementById('equationText').textContent = currentInput.replace(/\*/g, '×');
+    speak(currentInput.replace(/\*/g, 'times'));
+  } else {
+    currentInput += value;
+    document.getElementById('display').value = currentInput.replace(/\*/g, '×');
+    document.getElementById('equationText').textContent = currentInput.replace(/\*/g, '×');
+    speak(currentInput.replace(/\*/g, 'times'));
+  }
+}
+
+function calculate() {
+  try {
+    const result = eval(currentInput); // Use raw input with *
+    const displayEquation = currentInput
+      .replace(/\*/g, '×')
+      .replace(/\//g, '÷')
+      .replace(/\+/g, '+')
+      .replace(/-/g, '−');
+
+    const spokenEquation = currentInput
+      .replace(/\*/g, 'times')
+      .replace(/\//g, 'divided by')
+      .replace(/\+/g, 'plus')
+      .replace(/-/g, 'minus');
+
+    document.getElementById('display').value = result;
+    document.getElementById('equationText').textContent = `${displayEquation} = ${result}`;
+    speak(`${spokenEquation} equals ${result}`);
+    currentInput = result.toString(); // Keep raw result for next input
+  } catch (e) {
+    document.getElementById('display').value = 'Error';
+    document.getElementById('equationText').textContent = 'Invalid equation';
+    speak('Invalid equation');
+    currentInput = '';
+  }
+}
+
+    function clearDisplay() {
+      currentInput = '';
+      document.getElementById('display').value = '';
+      document.getElementById('equationText').textContent = '—';
+    }
+
+   function speak(text) {
+  const spokenText = text
+  .replace(/\*/g, 'times')
+  .replace(/\//g, 'divided by')
+  .replace(/\+/g, 'plus')
+  .replace(/-/g, 'minus');
+
+  const utterance = new SpeechSynthesisUtterance(spokenText);
+  
+  utterance.rate = 1;
+  speechSynthesis.speak(utterance);
+}
+  </script>
+</body>
+</html>
+ 

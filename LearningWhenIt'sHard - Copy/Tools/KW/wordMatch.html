@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Zarnok's Word Match Game</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f0f8ff;
+      padding: 20px;
+      text-align: center;
+    }
+
+    h1 {
+      color: #0b3d91;
+    }
+
+    #gameContainer {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+
+    #words, #definitions {
+      width: 45%;
+      min-height: 200px;
+      padding: 10px;
+      border: 2px solid #ccc;
+      background-color: #fff;
+    }
+
+    .word, .definition {
+      border: 2px dashed #aaa;
+      padding: 10px;
+      margin: 10px;
+      cursor: grab;
+      background-color: #fff;
+    }
+
+    .matched {
+      background-color: #d4edda;
+      border-color: #28a745;
+    }
+
+    #levelIndicator {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🧠 Zarnok's Word Match Game</h1>
+  <div id="levelIndicator">Level 1</div>
+  <div id="gameContainer">
+    <div id="words"></div>
+    <div id="definitions"></div>
+  </div>
+
+  <script>
+    const levels = [
+      {
+        words: [
+          { id: "kind", text: "Kind" },
+          { id: "brave", text: "Brave" },
+          { id: "quick", text: "Quick" }
+        ],
+        definitions: [
+          { match: "quick", text: "Moves fast" },
+          { match: "kind", text: "Nice to others" },
+          { match: "brave", text: "Not afraid" }
+        ]
+      },
+      {
+        words: [
+          
+          { id: "funny", text: "Funny" },
+          { id: "strong", text: "Strong" },
+          { id: "smart", text: "Smart" }
+        ],
+        definitions: [
+          { match: "strong", text: "Has power" },      
+          { match: "smart", text: "Learns quickly" },
+          { match: "funny", text: "Makes people laugh" }
+        ]
+      },
+        {
+    words: [
+      { id: "patient", text: "Patient" },
+      { id: "creative", text: "Creative" },
+      { id: "loyal", text: "Loyal" }
+      
+    ],
+    definitions: [
+      { match: "creative", text: "Thinks of new ideas" },
+      { match: "loyal", text: "Stays true to others" },
+      { match: "patient", text: "Waits calmly" }
+    ]
+  },
+  {
+    words: [
+      { id: "friendly", text: "Friendly" },
+      { id: "focused", text: "Focused" },
+      { id: "generous", text: "Generous" }
+    ],
+    definitions: [
+      { match: "friendly", text: "Easy to talk to" },
+      { match: "focused", text: "Pays attention" },
+      { match: "generous", text: "Shares with others" }
+    ]
+  },
+  {
+    words: [
+      { id: "confident", text: "Confident" },
+      { id: "honest", text: "Honest" },
+      { id: "helpful", text: "Helpful" }
+      
+    ],
+    definitions: [
+      { match: "helpful", text: "Gives support" },
+      { match: "honest", text: "Tells the truth" },      
+      { match: "confident", text: "Believes in self" }
+    ]
+  },
+  {
+    words: [
+      { id: "calm", text: "Calm" },
+      { id: "energetic", text: "Energetic" },
+      { id: "wise", text: "Wise" }
+    ],
+    definitions: [
+      { match: "calm", text: "Feels peaceful" },
+      { match: "energetic", text: "Full of energy" },
+      { match: "wise", text: "Makes good choices" }
+    ]
+  },
+  {
+    words: [
+      { id: "adaptable", text: "Adaptable" },
+      { id: "thoughtful", text: "Thoughtful" },
+      { id: "ambitious", text: "Ambitious" }
+      
+    ],
+    definitions: [
+      { match: "ambitious", text: "Wants to succeed" },      
+      { match: "adaptable", text: "Handles change well" },
+      { match: "thoughtful", text: "Thinks of others" }
+    ]
+  },
+  {
+    words: [
+      { id: "optimistic", text: "Optimistic" },
+      { id: "organized", text: "Organized" },
+      { id: "resilient", text: "Resilient" }
+    ],
+    definitions: [
+      { match: "optimistic", text: "Expects good things" },
+      { match: "organized", text: "Keeps things in order" },
+      { match: "resilient", text: "Bounces back from trouble" }
+    ]
+  },
+ {
+    words: [
+      
+      { id: "sad", text: "Sad" },
+      { id: "happy", text: "Happy" },
+      { id: "excited", text: "Excited" }
+    ],
+    definitions: [
+      { match: "happy", text: "Feels good inside" },
+      { match: "sad", text: "Feels down" },
+      { match: "excited", text: "Feels super happy" }
+    ]
+  },
+  {
+    words: [
+      { id: "fast", text: "Fast" },
+      { id: "slow", text: "Slow" },
+      { id: "quiet", text: "Quiet" }
+    ],
+    definitions: [
+      { match: "slow", text: "Moves gently" },
+      { match: "fast", text: "Moves quickly" },
+      { match: "quiet", text: "Makes little noise" }
+    ]
+  },
+  {
+    words: [
+      { id: "big", text: "Big" },
+      { id: "small", text: "Small" },
+      { id: "tall", text: "Tall" }
+    ],
+    definitions: [
+       { match: "tall", text: "High up" },
+      { match: "big", text: "Large in size" },
+      { match: "small", text: "Little in size" }
+     
+    ]
+  },
+  {
+    words: [
+      { id: "clean", text: "Clean" },
+      { id: "dirty", text: "Dirty" },
+      { id: "shiny", text: "Shiny" }
+    ],
+    definitions: [
+      { match: "clean", text: "Not messy" },
+      { match: "dirty", text: "Covered in mess" },
+      { match: "shiny", text: "Bright and smooth" }
+    ]
+  },
+  {
+    words: [
+      { id: "bumpy", text: "Bumpy" },
+      { id: "soft", text: "Soft" },
+      { id: "hard", text: "Hard" }
+      
+    ],
+    definitions: [
+      { match: "soft", text: "Easy to press" },
+      { match: "hard", text: "Not easy to press" },
+      { match: "bumpy", text: "Has little hills" }
+    ]
+  },
+  {
+    words: [
+      { id: "cold", text: "Cold" },
+      { id: "hot", text: "Hot" },
+      { id: "warm", text: "Warm" }
+    ],
+    definitions: [
+      { match: "cold", text: "Feels chilly" },
+      { match: "warm", text: "Feels cozy" },
+      { match: "hot", text: "Feels very warm" }
+    ]
+  },
+  {
+    words: [
+      { id: "bright", text: "Bright" },
+      { id: "dark", text: "Dark" },
+      { id: "colorful", text: "Colorful" }
+    ],
+    definitions: [
+       { match: "dark", text: "Not much light" },
+      { match: "bright", text: "Full of light" },
+      { match: "colorful", text: "Has many colors" }
+    ]
+  },
+  {
+    words: [
+      { id: "boring", text: "Boring" },
+      { id: "fun", text: "Fun" },
+      { id: "silly", text: "Silly" }
+    ],
+    definitions: [
+      { match: "fun", text: "Makes you smile" },
+      { match: "boring", text: "Not exciting" },
+      { match: "silly", text: "Funny and goofy" }
+    ]
+  },
+  {
+    words: [
+      { id: "mean", text: "Mean" },
+      { id: "polite", text: "Polite" },
+      { id: "friendly", text: "Friendly" },
+    ],
+    definitions: [
+      { match: "friendly", text: "Nice to others" },
+      { match: "mean", text: "Not nice" },
+      { match: "polite", text: "Uses kind words" }
+    ]
+  },
+  {
+    words: [
+      { id: "lazy", text: "Lazy" },
+      { id: "busy", text: "Busy" },
+      { id: "helpful", text: "Helpful" }
+    ],
+    definitions: [
+      { match: "busy", text: "Doing a lot" },
+      { match: "lazy", text: "Not doing much" },
+      { match: "helpful", text: "Likes to help" }
+    ]
+  },
+  {
+    words: [
+      { id: "scared", text: "Scared" },
+       { id: "brave", text: "Brave" },
+      { id: "strong", text: "Strong" }
+    ],
+    definitions: [
+      { match: "brave", text: "Does things even when afraid" },
+      { match: "scared", text: "Feels afraid" },
+      { match: "strong", text: "Has lots of power" }
+    ]
+  },
+  {
+    words: [
+      { id: "neat", text: "Neat" },
+      { id: "tidy", text: "Tidy" },
+      { id: "messy", text: "Messy" },
+    ],
+    definitions: [
+      { match: "neat", text: "Looks nice and clean" },
+      { match: "messy", text: "All over the place" },
+      { match: "tidy", text: "Put in order" }
+    ]
+  }
+
+
+      
+    ];
+
+  console.log(levels.length);
+    let currentLevel = 0;
+    const wordsContainer = document.getElementById("words");
+    const defsContainer = document.getElementById("definitions");
+    const levelIndicator = document.getElementById("levelIndicator");
+
+    function loadLevel(index) {
+      const level = levels[index];
+      levelIndicator.textContent = `Level ${index + 1}`;
+      wordsContainer.innerHTML = "";
+      defsContainer.innerHTML = "";
+
+      level.words.forEach(word => {
+        const div = document.createElement("div");
+        div.className = "word";
+        div.draggable = true;
+        div.id = word.id;
+        div.textContent = word.text;
+        wordsContainer.appendChild(div);
+
+        div.addEventListener("dragstart", e => {
+          e.dataTransfer.setData("text/plain", word.id);
+        });
+      });
+
+      level.definitions.forEach(def => {
+        const div = document.createElement("div");
+        div.className = "definition";
+        div.dataset.match = def.match;
+        div.textContent = def.text;
+        defsContainer.appendChild(div);
+
+        div.addEventListener("dragover", e => e.preventDefault());
+
+       div.addEventListener("drop", e => {
+  e.preventDefault();
+  const draggedId = e.dataTransfer.getData("text/plain");
+  const target = e.currentTarget; // ✅ This ensures correct reference
+
+  if (draggedId === target.dataset.match) {
+    target.classList.add("matched");
+    target.textContent += ` ✅ (${draggedId})`;
+    const draggedEl = document.getElementById(draggedId);
+    if (draggedEl) draggedEl.remove();
+    checkLevelComplete();
+  } else {
+    alert("❌ Try again!");
+  }
+});
+      });
+    }
+
+    function checkLevelComplete() {
+      const matched = defsContainer.querySelectorAll(".matched").length;
+      if (matched === levels[currentLevel].definitions.length) {
+        setTimeout(() => {
+          alert(`🎉 Level ${currentLevel + 1} complete!`);
+          currentLevel++;
+          
+          if (currentLevel < 21) {
+            loadLevel(currentLevel);
+          } else {
+            alert("🏆 You completed all levels!");
+            currentLevel = 0;
+            loadLevel(currentLevel);
+          }
+        }, 300);
+      }
+    }
+
+    loadLevel(currentLevel);
+  </script>
+
+</body>
+</html>

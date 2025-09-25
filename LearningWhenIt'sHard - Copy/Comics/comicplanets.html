@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kalen’s Big Journey</title>
+  <style>
+    :root{
+      --bg:#0b0f1a;        /* starry-night */
+      --fg:#eef2ff;        /* soft white */
+      --accent:#8b5cf6;    /* velari purple */
+      --muted:#94a3b8;     /* slate */
+      --btn:#111827;       /* button base */
+      --btnHover:#1f2937;  /* button hover */
+      --panel:#0f172a;     /* panel bg */
+      --shadow: 0 20px 40px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Helvetica, Arial, sans-serif;
+      background: radial-gradient(1200px 600px at 70% 20%, #0f1b2f 0%, var(--bg) 60%);
+      color:var(--fg);
+      display:grid; place-items:center;
+    }
+    .app{
+      width:min(1000px, 96vw);
+      height:min(680px, 92vh);
+      background:linear-gradient(180deg, #0b1324 0%, #0b0f1a 100%);
+      border:1px solid #1e293b; border-radius:24px; box-shadow:var(--shadow);
+      display:grid; grid-template-rows:auto 1fr auto; overflow:hidden;
+    }
+    header{
+      padding:18px 22px; display:flex; align-items:center; justify-content:space-between;
+      border-bottom:1px solid #1e293b; background:rgba(15,23,42,.6); backdrop-filter: blur(6px);
+    }
+    header h1{font-size:clamp(18px, 2.6vw, 26px); margin:0; letter-spacing:.5px}
+    header .meta{font-size:14px; color:var(--muted)}
+
+    .stage{
+      position:relative; overflow:hidden; background:var(--panel);
+      display:grid; grid-template-columns: 72px 1fr 72px; align-items:stretch;
+    }
+    .panel{
+      position:relative; padding:0; display:grid; place-items:center; overflow:hidden;
+    }
+    .panel svg{width:100%; height:100%; display:block; background:#05070f}
+
+    .navBtn{
+      display:grid; place-items:center; cursor:pointer; border:none; outline:3px solid transparent;
+      background:transparent; color:var(--fg); transition: .2s ease transform, .2s ease background;
+    }
+    .navBtn:hover{background:rgba(255,255,255,.04)}
+    .navBtn:active{transform:scale(.96)}
+
+    .navBtn .chev{
+      width:52px; height:52px; border-radius:16px; display:grid; place-items:center; border:1px solid #263147;
+      background:linear-gradient(180deg, #0b1222, #0b0f1a); box-shadow: inset 0 0 0 1px rgba(255,255,255,.04);
+    }
+    .navBtn svg{width:28px; height:28px}
+
+    footer{
+      padding:14px 20px; display:flex; align-items:center; justify-content:space-between; gap:12px;
+      border-top:1px solid #1e293b; background:rgba(15,23,42,.6); backdrop-filter: blur(6px);
+      font-size:15px;
+    }
+    .caption{color:#cbd5e1}
+    .pageDots{display:flex; gap:6px; align-items:center; flex-wrap:wrap}
+    .dot{
+      width:9px; height:9px; border-radius:50%; background:#263147; transition:transform .2s ease, background .2s ease;
+    }
+    .dot.active{background:var(--accent); transform:scale(1.35)}
+    .pageLabel{color:var(--muted); font-variant-numeric: tabular-nums}
+
+    .kbd{font: 600 12px ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; padding:2px 6px; border-radius:6px; border:1px solid #334155; background:#0b1222; color:#e2e8f0}
+
+    /* Small screens */
+    @media (max-width:720px){
+      .stage{grid-template-columns: 56px 1fr 56px}
+      .navBtn .chev{width:44px; height:44px}
+      .navBtn svg{width:22px; height:22px}
+      footer{font-size:14px}
+    }
+  </style>
+  <audio id="dreamer-audio" src="images/sound1comic2.mp3"></audio>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+  <div class="app" aria-live="polite">
+    <header>
+      <h1> TAOLB  -  Kalen’s Big Journey</h1>
+     
+      <div class="meta"><i class="fa-solid fa-person fa-2x"></i></div>
+    </header>
+
+    <section class="stage" id="stage">
+      <button class="navBtn" id="prevBtn" aria-label="Previous page">
+        <div class="chev" aria-hidden="true"> 
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15 5L8 12L15 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </button>
+
+      <figure class="panel" id="panel" aria-label="Comic panel" role="group"></figure>
+
+      <button class="navBtn" id="nextBtn" aria-label="Next page">
+        <div class="chev" aria-hidden="true"> 
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 5L16 12L9 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </button>
+    </section>
+
+    <footer>
+      <div class="caption" id="caption">Loading…</div>
+          <button id="toggle-sound" style="
+             
+              padding: 10px 20px;
+              font-size: 16px;
+              background-color: #4f46e5;
+              color: white;
+              border: none;
+              border-radius: 8px;
+              cursor: pointer;
+              z-index: 1000;
+              ">
+        🔊 Play Sound
+        </button>
+        <button id="read-text" style="
+  
+          padding: 10px 20px;
+          font-size: 16px;
+          background-color: #10b981;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          cursor: pointer;
+          z-index: 1000;
+        ">
+          🗣️ Read Aloud
+        </button>
+
+
+
+
+
+
+      <div style="display:flex; align-items:center; gap:12px;">
+        <div class="pageDots" id="dots" aria-hidden="true"></div>
+        <div class="pageLabel" id="pageLabel">1 / 12</div>
+      </div>
+   
+    </footer>
+  </div>
+
+  <script>
+   const audio = document.getElementById('dreamer-audio');
+const button = document.getElementById('toggle-sound');
+
+button.addEventListener('click', () => {
+  if (audio.paused) {
+    audio.play();
+    button.textContent = '⏹️ Stop Sound';
+  } else {
+    audio.pause();
+    audio.currentTime = 0; // Reset to beginning
+    button.textContent = '🔊 Play Sound';
+  }
+});
+
+    // --- Simple starfield generator reused across scenes ---
+    function makeStars(count, w, h){
+      const rnd = n=> Math.random()*n;
+      let stars = '';
+      for(let i=0;i<count;i++){
+        const x = rnd(w).toFixed(1);
+        const y = rnd(h).toFixed(1);
+        const r = (Math.random()*1.4+0.3).toFixed(2);
+        const o = (Math.random()*0.8+0.2).toFixed(2);
+        stars += `<circle cx="${x}" cy="${y}" r="${r}" fill="white" opacity="${o}"/>`;
+      }
+      return stars;
+    }
+
+    // --- Character and prop snippets (SVG fragments) ---
+    const Ava = (x,y,scale=1)=>`
+      <g transform="translate(${x} ${y}) scale(${scale})">
+        <circle cx="0" cy="0" r="18" fill="#ffd9a6"/>
+        <circle cx="-6" cy="-2" r="2" fill="#111"/>
+        <circle cx="6" cy="-2" r="2" fill="#111"/>
+        <path d="M-7 7 Q0 13 7 7" stroke="#111" stroke-width="2" fill="none"/>
+        <path d="M-20 -10 Q0 -26 20 -10" fill="#ff4d6d"/>
+      </g>`;
+
+    const Max = (x,y,scale=1)=>`
+      <g transform="translate(${x} ${y}) scale(${scale})">
+        <rect x="-16" y="-16" width="32" height="32" rx="6" fill="#ffd9a6"/>
+        <circle cx="-6" cy="-4" r="2" fill="#111"/>
+        <circle cx="6" cy="-4" r="2" fill="#111"/>
+        <path d="M-8 8 Q0 14 8 8" stroke="#111" stroke-width="2" fill="none"/>
+        <path d="M-20 -18 h40 v10 h-40z" fill="#22c55e"/>
+      </g>`;
+
+    const Ship = (x, y, scale = 1) => {
+  const width = 100 * scale;
+  const height = 100 * scale;
+  return `<img src="images/shipcomic2.png" style="position:absolute; left:${x}px; top:${y}px; width:${width}px; height:${height}px;">`;
+};
+
+const Earth = (x, y, scale = 1) => {
+  const width = 100 * scale;
+  const height = 100 * scale;
+  return `<img src="images/earthcomic2.png" style="position:absolute; left:${x}px; top:${y}px; width:${width}px; height:${height}px;">`;
+};
+
+    const Velari = (x,y,r=110)=>`
+      <g transform="translate(${x} ${y})">
+        <defs>
+          <radialGradient id="vCore" cx="50%" cy="40%" r="60%">
+            <stop offset="0%" stop-color="#c084fc"/>
+            <stop offset="60%" stop-color="#8b5cf6"/>
+            <stop offset="100%" stop-color="#5b21b6"/>
+          </radialGradient>
+        </defs>
+        <circle cx="0" cy="0" r="${r}" fill="url(#vCore)"/>
+        <g opacity=".25" fill="#fff">
+          <ellipse cx="-20" cy="-20" rx="${r*0.7}" ry="${r*0.18}" fill="#d8b4fe"/>
+          <ellipse cx="30" cy="10" rx="${r*0.55}" ry="${r*0.14}" fill="#a78bfa"/>
+        </g>
+      </g>`;
+
+    const Jelly = (x,y,scale=1)=>`
+      <g transform="translate(${x} ${y}) scale(${scale})">
+        <path d="M0 -20 C 20 -40, 40 -10, 30 10 C 25 25, -25 25, -30 10 C -40 -10, -20 -40, 0 -20" fill="#60a5fa" opacity=".8"/>
+        <g stroke="#60a5fa" stroke-width="2" fill="none" opacity=".9">
+          <path d="M-15 20 C -15 35, -25 45, -30 55"/>
+          <path d="M-5 22 C -5 37, -10 48, -14 58"/>
+          <path d="M 5 22 C 5 38, 12 50, 16 60"/>
+          <path d="M 15 20 C 15 36, 25 48, 30 58"/>
+        </g>
+        <circle cx="-6" cy="-8" r="2" fill="#111"/>
+        <circle cx="6" cy="-8" r="2" fill="#111"/>
+      </g>`;
+
+    const Rock = (x,y,s)=>`<ellipse cx="${x}" cy="${y}" rx="${s}" ry="${s*0.7}" fill="#64748b"/>`;
+
+    // --- Scenes (12 pages) ---
+    const pages = [
+     
+
+
+     {
+  title: "Page 1",
+  caption: "Dreamer",
+  art: () => baseScene(({W,H}) => `
+    <rect width="100%" height="100%" fill="#070b14"/>
+    <image href="images/earthcomic2.png" x="0" y="0" width="${W/2}" height="${H}" />
+    <text x="${W/2 + 40}" y="100" fill="#e2e8f0" font-size="26" font-weight="700">Kalen loved the stars</text>
+    <text x="${W/2 + 40}" y="140" fill="#e2e8f0" font-size="26" font-weight="700">Every night</text>
+    <text x="${W/2 + 40}" y="180" fill="#e2e8f0" font-size="26" font-weight="700"> he looked up and whispered</text>
+    <text x="${W/2 + 40}" y="220" fill="#e2e8f0" font-size="26" font-weight="700">“Someday, I’ll go there”</text>
+  `)
+  
+},
+      {
+        title: "Page 2  ",
+        caption: "Hard Work Pays Off",
+        art: () => baseScene(({W,H}) => `
+         <rect width="100%" height="100%" fill="#070b14"/>
+  
+  <!-- Image on the left half -->
+  <image href="images/workcomic2.png" x="0" y="0" width="${W/2}" height="${H}" />
+
+  <text x="${W/2 + 40}" y="100" fill="#e2e8f0" font-size="26" font-weight="700">A determined figure</text>
+<text x="${W/2 + 40}" y="140" fill="#e2e8f0" font-size="26" font-weight="700">drenched in sweat and grit</text>
+<text x="${W/2 + 40}" y="180" fill="#e2e8f0" font-size="26" font-weight="700">he pushes on to complete</text>
+<text x="${W/2 + 40}" y="220" fill="#e2e8f0" font-size="26" font-weight="700">his task</text>
+
+
+        `),
+        onEnter: () => {
+    const audio = new Audio('images/sound1comic2.mp3');
+    audio.play();
+  }
+      },
+       {
+        title: "Page 3  ",
+        caption: "The Sentinel",
+        art: () => baseScene(({W,H}) => `
+         <rect width="100%" height="100%" fill="#070b14"/>
+  
+  <!-- Image on the left half -->
+  <image href="images/sentinelcomic2.png" x="0" y="0" width="${W/2}" height="${H}" />
+
+  <text x="${W/2 + 40}" y="100" fill="#e2e8f0" font-size="26" font-weight="700">Engines rumble</text>
+<text x="${W/2 + 40}" y="140" fill="#e2e8f0" font-size="26" font-weight="700">clouds swirl</text>
+<text x="${W/2 + 40}" y="180" fill="#e2e8f0" font-size="26" font-weight="700">the sky waits, it's ready</text>
+<text x="${W/2 + 40}" y="220" fill="#e2e8f0" font-size="26" font-weight="700">"THE SENTINEL"</text>
+
+
+        `)
+      },
+       {
+        title: "Page 4 ",
+        caption: "Blast Off",
+        art: () => baseScene(({W,H}) => `
+         <rect width="100%" height="100%" fill="#070b14"/>
+  
+  <!-- Image on the left half -->
+  <image href="images/launchcomic2.png" x="0" y="0" width="${W/2}" height="${H}" />
+
+  <text x="${W/2 + 40}" y="100" fill="#e2e8f0" font-size="26" font-weight="700">The Sentinel blazed upward</text>
+<text x="${W/2 + 40}" y="140" fill="#e2e8f0" font-size="26" font-weight="700">leaving Earth behind</text>
+<text x="${W/2 + 40}" y="180" fill="#e2e8f0" font-size="26" font-weight="700">Kalen gripped his seat</text>
+<text x="${W/2 + 40}" y="220" fill="#e2e8f0" font-size="26" font-weight="700">eyes wide with wonder</text>
+
+
+        `)
+      },
+      {
+        title: "Page 5   ",
+        caption: "Milky Way",
+        art: () => baseScene(({W,H}) => `
+         <rect width="100%" height="100%" fill="#070b14"/>
+  
+  <!-- Image on the left half -->
+  <image href="images/windowcomic2.png" x="0" y="0" width="${W/2}" height="${H}" />
+
+  <text x="${W/2 + 40}" y="100" fill="#e2e8f0" font-size="26" font-weight="700">Stars shimmer</text>
+<text x="${W/2 + 40}" y="140" fill="#e2e8f0" font-size="26" font-weight="700">Earth glows below</text>
+<text x="${W/2 + 40}" y="180" fill="#e2e8f0" font-size="26" font-weight="700">surrounded by silence</text>
+<text x="${W/2 + 40}" y="220" fill="#e2e8f0" font-size="26" font-weight="700">welcome to space</text>
+
+
+        `)
+      },
+      {
+        title: "Page 6   ",
+        caption: "Saturn Goes By",
+        art: () => baseScene(({W,H}) => `
+         <rect width="100%" height="100%" fill="#070b14"/>
+  
+  <!-- Image on the left half -->
+  <image href="images/saturncomic2.png" x="0" y="0" width="${W/2}" height="${H}" />
+
+  <text x="${W/2 + 40}" y="100" fill="#e2e8f0" font-size="26" font-weight="700">Saturn looms distant</text>
+<text x="${W/2 + 40}" y="140" fill="#e2e8f0" font-size="26" font-weight="700">he has travelled so far</text>
+<text x="${W/2 + 40}" y="180" fill="#e2e8f0" font-size="26" font-weight="700">the Sentinel glides onward</text>
+<text x="${W/2 + 40}" y="220" fill="#e2e8f0" font-size="26" font-weight="700">fearless, deeper into the</text>
+<text x="${W/2 + 40}" y="260" fill="#e2e8f0" font-size="26" font-weight="700">unknown</text>
+
+
+        `)
+      },
+      {
+        title: "Page 7  ",
+        caption: "The Small Things",
+        art: () => baseScene(({W,H}) => `
+         <rect width="100%" height="100%" fill="#070b14"/>
+  
+  <!-- Image on the left half -->
+  <image href="images/teethcomic2.png" x="0" y="0" width="${W/2}" height="${H}" />
+
+  <text x="${W/2 + 40}" y="100" fill="#e2e8f0" font-size="26" font-weight="700">Small rituals anchor the mind</text>
+<text x="${W/2 + 40}" y="140" fill="#e2e8f0" font-size="26" font-weight="700">brushing, breathing, repeating</text>
+<text x="${W/2 + 40}" y="180" fill="#e2e8f0" font-size="26" font-weight="700">quiet acts of control</text>
+<text x="${W/2 + 40}" y="220" fill="#e2e8f0" font-size="26" font-weight="700"> in cosmic chaos</text>
+<text x="${W/2 + 40}" y="260" fill="#e2e8f0" font-size="26" font-weight="700">helps him stay in control</text>
+
+
+        `)
+      },
+      {
+        title: "Page 8  ",
+        caption: "Intergalactic Space ",
+        art: () => baseScene(({W,H}) => `
+         <rect width="100%" height="100%" fill="#070b14"/>
+  
+  <!-- Image on the left half -->
+  <image href="images/outsidegcomic2.png" x="0" y="0" width="${W/2}" height="${H}" />
+
+  <text x="${W/2 + 40}" y="100" fill="#e2e8f0" font-size="26" font-weight="700">Saturn looms distant</text>
+<text x="${W/2 + 40}" y="140" fill="#e2e8f0" font-size="26" font-weight="700">he has travelled so far</text>
+<text x="${W/2 + 40}" y="180" fill="#e2e8f0" font-size="26" font-weight="700">the Sentinel glides onward</text>
+<text x="${W/2 + 40}" y="220" fill="#e2e8f0" font-size="26" font-weight="700">fearless, deeper into the</text>
+<text x="${W/2 + 40}" y="260" fill="#e2e8f0" font-size="26" font-weight="700">unknown</text>
+
+
+        `)
+      },
+      {
+        title: "Page 9   ",
+        caption: "Someone Is Calling",
+        art: () => baseScene(({W,H}) => `
+         <rect width="100%" height="100%" fill="#070b14"/>
+  
+  <!-- Image on the left half -->
+  <image href="images/signalcomic2.png" x="0" y="0" width="${W/2}" height="${H}" />
+
+  <text x="${W/2 + 40}" y="100" fill="#e2e8f0" font-size="26" font-weight="700">A blue planet flickers quietly</text>
+<text x="${W/2 + 40}" y="140" fill="#e2e8f0" font-size="26" font-weight="700">in the distance</text>
+<text x="${W/2 + 40}" y="180" fill="#e2e8f0" font-size="26" font-weight="700">yet signals pulse from beyond</text>
+<text x="${W/2 + 40}" y="220" fill="#e2e8f0" font-size="26" font-weight="700">drawing The Sentinel toward</text>
+<text x="${W/2 + 40}" y="260" fill="#e2e8f0" font-size="26" font-weight="700"> unkown origins</text>
+
+
+        `)
+      },
+      {
+        title: "Page 10   ",
+        caption: "Echoes Beyond the Signal",
+        art: () => baseScene(({W,H}) => `
+         <rect width="100%" height="100%" fill="#070b14"/>
+  
+  <!-- Image on the left half -->
+  <image href="images/radarcomic2.png" x="0" y="0" width="${W/2}" height="${H}" />
+
+  <text x="${W/2 + 40}" y="100" fill="#e2e8f0" font-size="26" font-weight="700">Kalen studies the radar</text>
+<text x="${W/2 + 40}" y="140" fill="#e2e8f0" font-size="26" font-weight="700">signal traced to nearby planet</text>
+<text x="${W/2 + 40}" y="180" fill="#e2e8f0" font-size="26" font-weight="700">but something strange flickers</text>
+<text x="${W/2 + 40}" y="220" fill="#e2e8f0" font-size="26" font-weight="700"> elsewhere</text>
+<text x="${W/2 + 40}" y="260" fill="#e2e8f0" font-size="26" font-weight="700">uncharted and unknown</text>
+
+
+        `)
+      },
+      {
+        title: "Page 11  ",
+        caption: "Purple Planet",
+        art: () => baseScene(({W,H}) => `
+         <rect width="100%" height="100%" fill="#070b14"/>
+  
+  <!-- Image on the left half -->
+  <image href="images/purplecomic2.png" x="0" y="0" width="${W/2}" height="${H}" />
+
+  <text x="${W/2 + 40}" y="100" fill="#e2e8f0" font-size="26" font-weight="700">He moves onward</text>
+<text x="${W/2 + 40}" y="140" fill="#e2e8f0" font-size="26" font-weight="700">the signal is close</text>
+<text x="${W/2 + 40}" y="180" fill="#e2e8f0" font-size="26" font-weight="700">as he sees a planet </text>
+<text x="${W/2 + 40}" y="220" fill="#e2e8f0" font-size="26" font-weight="700">purple and bright</text>
+
+
+        `)
+      },
+      {
+        title: "Page 12  ",
+        caption: "Just Like My Dreams",
+        art: () => baseScene(({W,H}) => `
+         <rect width="100%" height="100%" fill="#070b14"/>
+  
+  <!-- Image on the left half -->
+  <image href="images/landingcomic2.png" x="0" y="0" width="${W/2}" height="${H}" />
+
+  <text x="${W/2 + 40}" y="100" fill="#e2e8f0" font-size="26" font-weight="700">This familiar land</text>
+<text x="${W/2 + 40}" y="140" fill="#e2e8f0" font-size="26" font-weight="700">quiet</text>
+<text x="${W/2 + 40}" y="180" fill="#e2e8f0" font-size="26" font-weight="700">violet</text>
+<text x="${W/2 + 40}" y="220" fill="#e2e8f0" font-size="26" font-weight="700">alive</text>
+<text x="${W/2 + 40}" y="260" fill="#e2e8f0" font-size="26" font-weight="700">just like in his dreams</text>
+<text x="${W/2 + 40}" y="300" fill="#e2e8f0" font-size="26" font-weight="700">he had finally arrived</text>
+<text x="${W/2 + 40}" y="380" fill="#e2e8f0" font-size="26" font-weight="700">THE END</text>
+
+
+
+        `)
+      },
+      
+    ];
+      
+    
+
+    function baseScene(draw){
+      const W = 900, H = 520; // fixed drawing plane, scales to fit
+      return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Comic art panel">${draw({W,H})}</svg>`;
+    }
+
+    // --- App logic ---
+    const panel = document.getElementById('panel');
+    const caption = document.getElementById('caption');
+    const pageLabel = document.getElementById('pageLabel');
+    const dots = document.getElementById('dots');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    let index = 0;
+
+    function render(){
+      const p = pages[index];
+      panel.innerHTML = p.art();
+      caption.innerHTML = `<strong>${p.title}</strong> — ${p.caption}`;
+      pageLabel.textContent = `${index+1} / ${pages.length}`;
+      dots.querySelectorAll('.dot').forEach((d,i)=>{
+        d.classList.toggle('active', i===index);
+      });
+      // manage focus for accessibility
+      (index===0?prevBtn:nextBtn).setAttribute('aria-disabled', index===0);
+    }
+
+    // build dots
+    pages.forEach((_,i)=>{
+      const d = document.createElement('div'); d.className='dot';
+      d.addEventListener('click',()=>{ index=i; render(); });
+      dots.appendChild(d);
+    });
+
+    // controls
+    prevBtn.addEventListener('click', ()=>{ index=(index-1+pages.length)%pages.length; render(); });
+    nextBtn.addEventListener('click', ()=>{ index=(index+1)%pages.length; render(); });
+
+    // keyboard nav
+    window.addEventListener('keydown', e=>{
+      if(e.key==='ArrowRight') { index=(index+1)%pages.length; render(); }
+      if(e.key==='ArrowLeft')  { index=(index-1+pages.length)%pages.length; render(); }
+    });
+
+    // touch swipe
+    let startX=null; 
+    panel.addEventListener('touchstart', e=>{ startX = e.touches[0].clientX; }, {passive:true});
+    panel.addEventListener('touchend', e=>{
+      if(startX==null) return; const dx = e.changedTouches[0].clientX - startX; startX=null; 
+      if(Math.abs(dx) < 40) return; // ignore small moves
+      if(dx<0) { index=(index+1)%pages.length; } else { index=(index-1+pages.length)%pages.length; }
+      render();
+    });
+
+    const pageText = {
+  page1: "Kalen loved the stars. Every night, he looked up and whispered, “Someday, I’ll go there.”",
+  page2: "A determined figure, drenched in sweat and grit, he pushes on to complete his task.",
+  page3: "Engines rumble. Clouds swirl. The sky waits, it's ready. 'THE SENTINEL'.",
+  page4: "The Sentinel blazed upward, leaving Earth behind. Kalen gripped his seat, eyes wide with wonder.",
+  page5: "Stars shimmer. Earth glows below, surrounded by silence. Welcome to space.",
+  page6: "Saturn looms distant. He has travelled so far. The Sentinel glides onward, fearless, deeper into the unknown.",
+  page7: "Small rituals anchor the mind—brushing, breathing, repeating. Quiet acts of control in cosmic chaos help him stay in control.",
+  page8: "Saturn looms distant. He has travelled so far. The Sentinel glides onward, fearless, deeper into the unknown.",
+  page9: "A blue planet flickers quietly in the distance, yet signals pulse from beyond, drawing The Sentinel toward unknown origins.",
+  page10: "Kalen studies the radar—signal traced to nearby planet, but something strange flickers elsewhere, uncharted and unknown.",
+  page11: "He moves onward. The signal is close as he sees a planet—purple and bright.",
+  page12: "This familiar land—quiet, violet, alive. Just like in his dreams. He had finally arrived. THE END."
+};
+
+
+
+
+document.getElementById('read-text').addEventListener('click', () => {
+  const ind = index + 1;
+ const text = pageText["page"+ind]; 
+   const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 1;
+    utterance.pitch = 1;
+    console.log(ind);
+    speechSynthesis.speak(utterance);
+});
+
+    // init
+    render();
+  </script>
+</body>
+</html>

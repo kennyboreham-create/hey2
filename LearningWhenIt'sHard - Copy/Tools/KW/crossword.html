@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mini Crossword Game</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f0f8ff;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #0b3d91;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(5, 50px);
+      grid-template-rows: repeat(6, 50px);
+      gap: 5px;
+      justify-content: center;
+      margin: 20px auto;
+    }
+
+    .cell {
+      width: 50px;
+      height: 50px;
+      font-size: 24px;
+      text-transform: uppercase;
+      text-align: center;
+      border: 2px solid #0b3d91;
+      background-color: white;
+    }
+
+    .cell.correct {
+      background-color: #4caf50;
+      color: white;
+    }
+
+    .clues {
+      margin-top: 20px;
+    }
+
+    .clues li.found {
+      text-decoration: line-through;
+      color: gray;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #0b3d91;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #005bb5;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Mini Crossword Game</h1>
+  <p>Type the letters to complete each word!</p>
+
+  <div class="grid" id="grid"></div>
+
+  <ul class="clues" id="clueList">
+    <li>MOON</li>
+    <li>TREE</li>
+    <li>FISH</li>
+    <li>STAR</li>
+    <li>ROCK</li>
+    <li>BIRD</li>
+  </ul>
+
+  <button onclick="resetGame()">Reset Game</button>
+
+  <script>
+    const words = ["MOON", "TREE", "FISH", "STAR", "ROCK", "BIRD"];
+    const grid = document.getElementById("grid");
+    const clueList = document.getElementById("clueList").children;
+
+    function createGrid() {
+      grid.innerHTML = "";
+      words.forEach((word, row) => {
+        for (let col = 0; col < 5; col++) {
+          const input = document.createElement("input");
+          input.classList.add("cell");
+          input.maxLength = 1;
+          input.dataset.row = row;
+          input.dataset.col = col;
+          grid.appendChild(input);
+        }
+      });
+    }
+
+    function checkWords() {
+      for (let i = 0; i < words.length; i++) {
+        let correct = true;
+        for (let j = 0; j < words[i].length; j++) {
+          const index = i * 5 + j;
+          const cell = grid.children[index];
+          if (cell.value.toUpperCase() !== words[i][j]) {
+            correct = false;
+            break;
+          }
+        }
+
+        if (correct) {
+          for (let j = 0; j < words[i].length; j++) {
+            const index = i * 5 + j;
+            grid.children[index].classList.add("correct");
+            grid.children[index].disabled = true;
+          }
+          clueList[i].classList.add("found");
+        }
+      }
+    }
+
+    grid.addEventListener("input", checkWords);
+
+    function resetGame() {
+      createGrid();
+      for (let clue of clueList) {
+        clue.classList.remove("found");
+      }
+    }
+
+    createGrid();
+  </script>
+
+</body>
+</html>

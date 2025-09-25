@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TAOLB Characters</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+ 
+
+
+  <style>
+    body {
+      background-color: #000;
+      color: #f0f0f0;
+      font-weight: 500;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .hero {
+      background: url('images/blueback1.png') center/cover no-repeat;
+      height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-shadow: 2px 2px 4px #000;
+    }
+    .hero h1 {
+      font-size: 3rem;
+      color: #ffe81f;
+    }
+    .card {
+      background-color: #1c1c1c;
+      border: none;
+      color: #f0f0f0;
+      transition: transform 0.3s;
+    }
+    .card:hover {
+      transform: scale(1.05);
+    }
+    .card-img-top {
+      height: 250px;
+      object-fit: cover;
+      
+
+    }
+    .section-title {
+      color: #ffe81f;
+      margin-top: 2rem;
+    }
+    .close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  padding:5 px;
+}
+  </style>
+</head>
+<body>
+
+  <div class="hero">
+    <h1>TAOLB</h1>
+  </div>
+
+  <div class="container">
+    <h2 class="section-title">Zorathians</h2>
+     <ol class="breadcrumb justify-content-center">
+                                    <li class="breadcrumb-item"><a class="text-white" href="../index.html">Home</a></li>
+                                    <li class="breadcrumb-item"><a class="text-white" href="../story.html">Stories</a></li>
+                                    <li class="breadcrumb-item">Click the picture to get a closer look</li>
+                                </ol>
+    <div class="row row-cols-1 row-cols-md-3 g-4 mt-3">
+      <div class="col">
+        <div class="card h-100">
+           <img src="images/Thalor1.png" class="card-img-top" style="object-position: top; cursor: pointer;" alt="A blue reptilian scout"
+     data-bs-toggle="modal" data-bs-target="#imageModal1">
+          <div class="card-body">
+            <h5 class="card-title">Thalor</h5>
+            <p class="card-text">Supreme Warlord of Zorath</p>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card h-100">
+          <img src="images/Zyra1.png" class="card-img-top" style="object-position: top; cursor: pointer;" alt="A blue reptilian scout"
+     data-bs-toggle="modal" data-bs-target="#imageModal2">
+          <div class="card-body">
+            <h5 class="card-title">Zyra</h5>
+            <p class="card-text">Mystic and battlefield medic
+</p>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card h-100">
+         <img src="images/varek1.png" class="card-img-top" style="object-position: top; cursor: pointer;" alt="A blue reptilian scout"
+     data-bs-toggle="modal" data-bs-target="#imageModal">
+          <div class="card-body">
+            <h5 class="card-title">Varek</h5>
+            <p class="card-text">Loyal warrior and Thalor’s right hand</p>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card h-100">
+           <img src="images/liora1.png" class="card-img-top" style="object-position: top; cursor: pointer;" alt="A blue reptilian scout"
+     data-bs-toggle="modal" data-bs-target="#imageModal3">
+          <div class="card-body">
+            <h5 class="card-title">Liora</h5>
+            <p class="card-text">Elite warrior and commander of the Sky Guard</p>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card h-100">
+          <img src="images/drakon1.png" class="card-img-top" style="object-position: top; cursor: pointer;" alt="A blue reptilian scout"
+     data-bs-toggle="modal" data-bs-target="#imageModal4">
+          <div class="card-body">
+            <h5 class="card-title">Drakon</h5>
+            <p class="card-text">Mythic warrior, solitary guardian</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col">
+        <div class="card h-100">
+           <img src="images/nyx1.png" class="card-img-top" style="object-position: top; cursor: pointer;" alt="A blue reptilian scout"
+     data-bs-toggle="modal" data-bs-target="#imageModal5">
+          <div class="card-body">
+            <h5 class="card-title">Nyx</h5>
+            <p class="card-text">Elder and spiritual guide</p>
+          </div>
+        </div>
+      </div>
+      <!-- Add more character cards as needed -->
+    </div>
+  </div>
+  <!-- Modal -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+  
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content bg-dark">
+<span class="close" onclick="closeModal()">&times;</span>
+      <div class="modal-body text-center">
+        <img src="images/varek1.png" class="img-fluid" alt="Full view of Varek">
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="imageModal1" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content bg-dark">
+      <div class="modal-body text-center">
+        <img src="images/Thalor1.png" class="img-fluid" alt="Full view of Varek">
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="imageModal2" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content bg-dark">
+      <div class="modal-body text-center">
+        <img src="images/Zyra1.png" class="img-fluid" alt="Full view of Varek">
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="imageModal3" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content bg-dark">
+      <div class="modal-body text-center">
+        <img src="images/liora1.png" class="img-fluid" alt="Full view of Varek">
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="imageModal4" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content bg-dark">
+      <div class="modal-body text-center">
+        <img src="images/drakon1.png" class="img-fluid" alt="Full view of Varek">
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="imageModal5" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content bg-dark">
+      <div class="modal-body text-center">
+        <img src="images/nyx1.png" class="img-fluid" alt="Full view of Varek">
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Bootstrap JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function closeModal() {
+  document.getElementById("imageModal").style.display = "none";
+}
+
+</script>
+
+</body>
+</html>

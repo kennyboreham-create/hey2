@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TAOLB Characters</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body {
+      background-color: #000;
+      color: #f0f0f0;
+      font-weight: 500;
+      font-family: 'Segoe UI', sans-serif;
+      margin-bottom:  500px;
+    }
+    .hero {
+      background: url('images/dragon1.png') center/cover no-repeat;
+      height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-shadow: 2px 2px 4px #000;
+    }
+    .hero h1 {
+      font-size: 3rem;
+      color: #ffe81f;
+    }
+    .card {
+      background-color: #1c1c1c;
+      border: none;
+      color: #f0f0f0;
+      transition: transform 0.3s;
+    }
+    .card:hover {
+      transform: scale(1.05);
+    }
+    .card-img-top {
+      height: 250px;
+      object-fit: cover;
+      
+
+    }
+    .section-title {
+      color: #ffe81f;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="hero">
+    <h1>TAOLB</h1>
+  </div>
+
+  <div class="container">
+    <h2 class="section-title">Bug World</h2>
+     <ol class="breadcrumb justify-content-center">
+                                    <li class="breadcrumb-item"><a class="text-white" href="../index.html">Home</a></li>
+                                    <li class="breadcrumb-item"><a class="text-white" href="../story.html">Stories</a></li>
+                                    
+                                </ol>
+    <div class="row row-cols-1 row-cols-md-3 g-4 mt-3">
+      <div class="col">
+        <div class="card h-100">
+          <img src="images/bug2.png" class="card-img-top " style="object-fit: contain;"  alt="A red dragon">
+          <div class="card-body">
+            <h5 class="card-title">Kraxxis the Maw</h5>
+            <p class="card-text">A fearsome predator from the shadowed moons of Varnak</p>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card h-100">
+          <img src="images/bug1.png" class="card-img-top" alt="A flying gryphon">
+          <div class="card-body">
+            <h5 class="card-title">Zarnok/Mivra/Stitle</h5>
+            <p class="card-text">A trio of leaders </p>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card h-100">
+          <img src="images/bug3.png" class="card-img-top" style="object-fit: contain;"  alt="A flying tiger">
+          <div class="card-body">
+            <h5 class="card-title">Bibble</h5>
+            <p class="card-text">Gentle, curious, and wise. Bibble hails from the lush forests of Elowen Prime, where it communicates through song-like vibrations</p>
+          </div>
+        </div>
+      </div>
+     
+      <!-- Add more character cards as needed -->
+    </div>
+  </div>
+
+</body>
+</html>

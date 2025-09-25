@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Riley's Math Tool 1<100</title>
+        <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico" />
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:500,700" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Muli:400,400i,800,800i" rel="stylesheet" type="text/css" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="css/styles.css" rel="stylesheet" />
+        
+
+    </head>
+    <body >
+>
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="sideNav">
+          <a href="../../index.html">Home</a>
+            <a class="navbar-brand js-scroll-trigger" href="#page-top">
+              
+                <span class="d-block d-lg-none"></span>
+                <span class="d-none d-lg-block"><img class="img-fluid img-profile rounded-circle mx-auto mb-2" src="../../characters/images/riley.png" alt="..." /></span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav">
+                    <li id="counter">Points: <div >0</div><a class="nav-link js-scroll-trigger" href="#about">Bip<br>Bop</a></li>
+                    
+                </ul>
+                 
+            </div>
+        </nav>
+        <!-- Page Content-->
+        
+        <div class="container-fluid p-0">
+            <!-- About-->
+            <section class="resume-section" id="about">
+                <div class="resume-section-content">
+                    <h1 class="mb-0">
+                        Riley's 
+                        <span class="text-primary">Math Tool 1</span>
+                    </h1>
+                    <div class="subheading mb-5">
+                        Step 1 - Click the addition repeater to learn questions <br>
+                        Step 2 - Complete 50 times to receive 50 Points <br>
+                        Step 3 - Do the test at the bottom 10 times <br>
+                        Step 4 - Work on every day for 30 days <br>
+                        
+                    </div>
+                   
+                </div>
+            </section>
+            <hr class="m-0" />
+           
+            <hr class="m-0" />
+           
+            <hr class="m-0" />
+           
+            <hr class="m-0" />
+            <!-- Education-->
+            <section class="resume-section" id="wordRead" id="page-top" >
+     <h2>Addition Repeater</h2>
+</head>
+    <button class="fun-button " id="hey" >Click Me!</button>
+  <div id="wordBox">---<br><small>Click to start!</small></div><br><br>
+  
+
+  
+
+
+            </section>
+            <hr class="m-0" />
+           
+            <hr class="m-0" />
+             <section class="resume-section" id="about">
+                <div class="resume-section-content">
+                    <h1 class="mb-0">
+                        
+                        <span class="text-primary">Test</span>
+                    </h1><div class="subheading mb-5" style="text-align: center;">Click to show new question, press enter to see if your answer is right.</div>
+                    <br><br><br><button class="fun-button" id="hey2" >Click Me!</button><br><br><br>
+                  <div style="display: flex; justify-content: center; align-items: center; gap: 10px;">
+                   <div class="sent1" id="wordBox2">  Test  </div><input style="text-align: center; width: 100px;" id="myInput"><br>
+
+                     
+                        
+                    
+                   </div>
+                </div>
+            </section>
+            <hr class="m-0" />
+
+       
+
+
+           
+    
+     <script>
+    const words = [];
+    const sent = [];
+
+for (let i = 1; i <= 10; i++) {
+  words.push(`${i} + ${i} = ${i + i}`);
+}
+
+for (let i = 1; i <= 10; i++) {
+  sent.push(`${i}`);
+}
+
+
+
+
+   
+
+let count = 0;
+const counterDiv = document.getElementById("counter");
+
+    function getRandomWord() {
+      return words[Math.floor(Math.random() * words.length)];
+    }
+
+    function speakWord(word) {
+      const utterance = new SpeechSynthesisUtterance(word);
+      speechSynthesis.speak(utterance);
+    }
+
+    const wordBox = document.getElementById("wordBox");
+   
+   window.addEventListener("DOMContentLoaded", () => {
+
+    function getRandomBetween5And30() {
+  return Math.floor(Math.random() * (30 - 5 + 1)) + 5;
+}
+
+let randomNum = getRandomBetween5And30();
+
+    hey.addEventListener("click", () => {
+      const word = getRandomWord();
+      wordBox.innerHTML = word;
+      count++;
+        counterDiv.textContent = count;
+        document.getElementById("hey").classList.toggle("newSpot");
+
+       if (count == randomNum ){
+
+            confetti({
+                shapes: ['text'],
+                 shapeOptions: {
+                 text: ['🎉', '💥', '✨']
+
+                    }
+            });
+       }
+
+        if (count > 49) {
+
+           alert("Good Job Brianna");
+           document.getElementById("wordRead").classList.add("bGround");
+
+         confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+
+
+        }
+
+
+        console.log(randomNum);
+      speakWord(word);
+      
+    });
+
+});
+     function getRandomWord2() {
+      return sent[Math.floor(Math.random() * sent.length)];
+    }
+
+    
+
+    const wordBox2 = document.getElementById("wordBox2");
+   
+   
+
+    hey2.addEventListener("click", () => {
+         window.word2 = getRandomWord2();
+       window.word3 = getRandomWord2();
+      const word4 = document.getElementById("myInput").value;
+        const yep = Number(word2) + Number(word3);
+        window.comb = yep;
+      
+      wordBox2.innerHTML = word2 + " + " + word3 + " =";
+      
+     
+      
+    });
+
+    hey2.addEventListener("click", () => {
+     
+     
+      
+     
+      
+    });
+
+    const congrats = ["Congrats Brianna!!","Good Job B!", "Baaam, nice!!!!", "Bro, good job!!","You are right!!","Ah Snaaaap!!!!!!","I knew you had it!!","Blammmo!!","Shaboosh!!!","Ahhh, Yeeaahh!!!"];
+
+        function getRandomWord6() {
+      return congrats[Math.floor(Math.random() * congrats.length)];
+    }
+
+    
+
+     document.getElementById("myInput").addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+
+        const word4 = document.getElementById("myInput").value;
+        
+        
+        
+      if ( window.comb == word4) {
+            const congrat = getRandomWord6();
+
+        alert(congrat);
+        confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+
+      };
+      console.log(window.comb);
+    }
+  });
+
+
+
+     
+
+  
+ let moved = false;
+  function moveButton() {
+    const button = document.querySelector('.move-button');
+    if (!moved) {
+      button.style.left = '200px';  // move right
+      button.style.top = '100px';   // move down
+      button.style.position = 'absolute';
+    } else {
+      button.style.left = '0px';
+      button.style.top = '0px';
+    }
+    moved = !moved;
+  }
+
+
+
+  </script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+</html>

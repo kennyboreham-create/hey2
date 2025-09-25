@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Shape Group Builder</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #2e004d;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      padding: 20px;
+    }
+
+    #gameInfo {
+      width: 150px;
+    }
+
+    #gameArea {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #shapePalette {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .shape {
+      width: 50px;
+      height: 50px;
+      cursor: grab;
+    }
+
+    .circle {
+      background-color: #ffcc00;
+      border-radius: 50%;
+    }
+
+    .square {
+      background-color: #00ccff;
+    }
+
+    .triangle {
+      width: 0;
+      height: 0;
+      border-left: 25px solid transparent;
+      border-right: 25px solid transparent;
+      border-bottom: 50px solid #ff6699;
+    }
+
+    .rectangle {
+      background-color: #66ff66;
+      width: 70px;
+      height: 30px;
+    }
+
+    #canvas {
+      width: 400px;
+      height: 200px;
+      background-color: #1e0033;
+      border: 2px dashed #d1b3ff;
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .dropped {
+      position: absolute;
+    }
+
+    #instruction {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    #checkBtn {
+      padding: 10px 20px;
+      background-color: #9933ff;
+      border: none;
+      color: white;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-left: 10px;
+
+    }
+
+    #message {
+      margin-top: 10px;
+      font-size: 18px;
+      color: #66ff66;
+    }
+    #speechToggleBtn {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #ff9966;
+  border: none;
+  color: white;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+  </style>
+</head>
+<body>
+  <div id="gameInfo">
+    <h3>Level: <span id="level">1</span></h3>
+    <h3>Points: <span id="points">0</span></h3>
+  </div>
+
+  <div id="gameArea">
+    <h1>Shape Group Builder</h1>
+    <div id="shapePalette">
+      <div class="shape circle" draggable="true" data-shape="circle"></div>
+      <div class="shape square" draggable="true" data-shape="square"></div>
+      <div class="shape triangle" draggable="true" data-shape="triangle"></div>
+      <div class="shape rectangle" draggable="true" data-shape="rectangle"></div>
+    </div>
+
+    <div id="instruction">Loading...</div>
+    <div id="canvas" ondragover="allowDrop(event)" ondrop="dropShape(event)"></div>
+    <div>
+    <button id="checkBtn" onclick="checkGroup()">Check Group</button><space> </space><button id="speechToggleBtn" onclick="toggleSpeech()">Speech: OFF</button></div>
+    <div id="message"></div>
+  </div>
+
+  <script>
+    let level = 1;
+    let points = 0;
+    let targetGroup = {};
+
+    function allowDrop(ev) {
+      ev.preventDefault();
+    }
+
+    document.querySelectorAll('.shape').forEach(shape => {
+      shape.addEventListener('dragstart', function(ev) {
+        ev.dataTransfer.setData("shape", ev.target.getAttribute("data-shape"));
+      });
+    });
+
+    function dropShape(ev) {
+      ev.preventDefault();
+      const shapeType = ev.dataTransfer.getData("shape");
+      const newShape = document.createElement("div");
+      newShape.className = `shape ${shapeType} dropped`;
+      newShape.style.left = ev.offsetX + 'px';
+      newShape.style.top = ev.offsetY + 'px';
+      newShape.setAttribute("data-shape", shapeType);
+      document.getElementById("canvas").appendChild(newShape);
+    }
+
+    function generateInstruction() {
+      const shapes = ['circle', 'square', 'triangle', 'rectangle'];
+      targetGroup = {};
+      let total = 0;
+
+      while (total === 0 || total > 7) {
+        targetGroup = {};
+        total = 0;
+        const count = Math.floor(Math.random() * 2) + 1; // 1 or 2 shapes
+        const selectedShapes = shapes.sort(() => 0.5 - Math.random()).slice(0, count);
+
+        selectedShapes.forEach(shape => {
+          const qty = Math.floor(Math.random() * 4) + 1; // 1 to 4
+          targetGroup[shape] = qty;
+          total += qty;
+        });
+      }
+
+      const parts = Object.entries(targetGroup).map(([shape, qty]) => `${qty} ${shape}${qty > 1 ? 's' : ''}`);
+      document.getElementById('instruction').textContent = `Create a group of ${parts.join(' and ')}`;
+      document.getElementById('message').textContent = '';
+      document.getElementById('canvas').innerHTML = '';
+    }
+
+    function checkGroup() {
+      const dropped = document.querySelectorAll('#canvas .dropped');
+      const counts = { circle: 0, square: 0, triangle: 0, rectangle: 0 };
+
+      dropped.forEach(shape => {
+        const type = shape.getAttribute("data-shape");
+        counts[type]++;
+      });
+
+      const isCorrect = Object.entries(targetGroup).every(([shape, qty]) => counts[shape] === qty) &&
+                        Object.keys(counts).every(shape => !targetGroup[shape] || counts[shape] === targetGroup[shape]);
+
+      const message = document.getElementById('message');
+      if (isCorrect) {
+        points += 10;
+        level++;
+        message.textContent = "Correct! 🎉";
+      } else {
+        message.textContent = "Try again!";
+      }
+
+      document.getElementById('points').textContent = points;
+      document.getElementById('level').textContent = level <= 20 ? level : "🏆";
+
+      if (level <= 20) {
+        setTimeout(generateInstruction, 1000);
+      } else {
+        message.textContent = "Game Over! You completed all 20 levels!";
+      }
+    }
+
+    let speechEnabled = false;
+
+function toggleSpeech() {
+  speechEnabled = !speechEnabled;
+  document.getElementById('speechToggleBtn').textContent = `Speech: ${speechEnabled ? 'ON' : 'OFF'}`;
+}
+
+if (speechEnabled) {
+  const utterance = new SpeechSynthesisUtterance("Correct! Great job!");
+  speechSynthesis.speak(utterance);
+}
+
+function generateInstruction() {
+  const shapes = ['circle', 'square', 'triangle', 'rectangle'];
+  targetGroup = {};
+  let total = 0;
+
+  while (total === 0 || total > 7) {
+    targetGroup = {};
+    total = 0;
+    const count = Math.floor(Math.random() * 2) + 1; // 1 or 2 shapes
+    const selectedShapes = shapes.sort(() => 0.5 - Math.random()).slice(0, count);
+
+    selectedShapes.forEach(shape => {
+      const qty = Math.floor(Math.random() * 4) + 1; // 1 to 4
+      targetGroup[shape] = qty;
+      total += qty;
+    });
+  }
+
+  const parts = Object.entries(targetGroup).map(([shape, qty]) => `${qty} ${shape}${qty > 1 ? 's' : ''}`);
+  const question = `Create a group of ${parts.join(' and ')}`;
+  document.getElementById('instruction').textContent = question;
+  document.getElementById('message').textContent = '';
+  document.getElementById('canvas').innerHTML = '';
+
+  // ✅ Speak the question if speech is enabled
+  if (speechEnabled) {
+    const utterance = new SpeechSynthesisUtterance(question);
+    speechSynthesis.speak(utterance);
+  }
+}
+    // Start game
+    generateInstruction();
+  </script>
+</body>
+</html>

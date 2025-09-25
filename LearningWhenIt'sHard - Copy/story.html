@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>TAOLB Stories</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500&family=Jost:wght@500;600;700&display=swap" rel="stylesheet"> 
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="lib/animate/animate.min.css" rel="stylesheet">
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="css/style.css" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="/characters/images/favmist.svg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="icon" href="img/favicon_io/favicon.ico">
+    <style> 
+    #toggleImage {
+      cursor: pointer;
+      width: 300px; /* Adjust size as needed */
+      transition: opacity 0.5s ease-in-out;
+    }
+    .velarian-icon {
+  color: #8a2be2;         /* Deep violet, mystical */
+  text-shadow: 0 0 8px #00ffff;  /* Ethereal glow */
+  font-size: 2em;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { text-shadow: 0 0 8px #00ffff; }
+  50% { text-shadow: 0 0 16px #00ffff; }
+  100% { text-shadow: 0 0 8px #00ffff; }
+}
+.zorathian-icon {
+  color: darkblue;              /* Deep aquatic blue */
+  text-shadow: 0 0 10px #1e90ff; /* Electric glow */
+  font-size: 2.2em;
+  animation: ripple 3s infinite;
+}
+
+@keyframes ripple {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.7);
+}
+
+.modal-content {
+  background-color: #1a1a1a;
+  margin: 10% auto;
+  padding: 20px;
+  border: 1px solid #444;
+  width: 60%;
+  color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 20px #00ff99;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover {
+  color: #fff;
+}
+
+.icon-label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.icon-label i {
+  margin-right: 10px;
+}
+.rmbg-icon {
+  background-color: #f0f0f0;
+
+  border-radius: 8px;
+  display: inline-block;
+}
+
+</style>
+</head>
+
+<body>
+    <div class="container-xxl bg-white p-0">
+        <!-- Spinner Start -->
+        <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+            <div class="spinner-grow text-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <!-- Spinner End -->
+
+
+        <!-- Navbar & Hero Start -->
+        <div class="container-xxl position-relative p-0">
+            <nav class="navbar navbar-expand-lg navbar-light px-4 px-lg-5 py-3 py-lg-0">
+                <a href="" class="navbar-brand p-0">
+                    <h1 class="m-0">Learning When It's Hard</h1>
+                    <!-- <img src="img/logo.png" alt="Logo"> -->
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                    <span class="fa fa-bars"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <div class="navbar-nav mx-auto py-0">
+                        <a href="index.html" class="nav-item nav-link">Home</a>
+                        <a href="about.html" class="nav-item nav-link">About</a>
+                        <a href="reading.html" class="nav-item nav-link">Reading</a>
+                        <a href="math.html" class="nav-item nav-link">Math</a>
+                        <a href="typing.html" class="nav-item nav-link">Typing</a>
+                        <div class="nav-item dropdown d-none">
+                            <a href="#" class="nav-link dropdown-toggle " data-bs-toggle="dropdown">Other</a>
+                            
+                            <div class="dropdown-menu m-0 ">
+                                <a href="typing.html" class="dropdown-item">Typing</a>
+                                <a href="problemsolving.html" class="dropdown-item">Problem Solving</a>
+                                <a href="coding.html" class="dropdown-item">Coding</a>
+                            </div>
+                        </div>
+                        <a href="story.html" class="nav-item nav-link active">Story</a>
+                    </div>
+                    <a href="" class="btn rounded-pill py-2 px-4 ms-3 d-none d-lg-block">Get Started</a>
+                </div>
+            </nav>
+
+            <div class="container-xxl py-5 bg-primary hero-header">
+                <div class="container my-5 py-5 px-lg-5">
+                    <div class="row g-5 py-5">
+                        <div class="col-12 text-center">
+                            <h1 class="text-white animated slideInDown">TAOLB Story</h1>
+                            <hr class="bg-white mx-auto mt-0" style="width: 90px;">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb justify-content-center">
+                                    <li class="breadcrumb-item"><a class="text-white" href="#comic">Comics</a></li>
+                                    <li class="breadcrumb-item"><a class="text-white" href="#character">Characters</a></li>
+                                    <li class="breadcrumb-item"><a class="text-white" href="#planet">Planets</a></li>
+                                    <li class="breadcrumb-item"><a class="text-white" href="#spaceship">Spaceships</a></li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Navbar & Hero End -->
+
+
+         <!-- Service Start -->
+        <div class="container-xxl py-5">
+            <div class="container py-5 px-lg-5">
+                <div class="wow fadeInUp" data-wow-delay="0.1s">
+                    <p class="section-title text-primary justify-content-center"><span></span>Everything TAOLB<span></span></p>
+                    <h1 class="text-center mb-5">Explore The World</h1>
+                </div>
+                <div class="row g-4">
+                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                        <div class="service-item d-flex flex-column text-center rounded">
+                            <div class="service-icon flex-shrink-0">
+                                <img src="img/favicon_io/favicon.ico" alt="DNA Icon" width="32" height="32">
+                            </div>
+                            <h5 class="mb-3">Species</h5>
+                           
+                                 <a  target="_blank" href="characters/humans.html">   <i class="fa fa-person fa-2x"></i></a><p>Humans</p><br>
+                                   <a  target="_blank" href="characters/Velari.html"><i class="fa-solid fa-star-of-life velarian-icon fa-2x"></i></a><p>Velarians</p><br>
+                                 <a  target="_blank" href="characters/zorathians.html"><i class="fa-solid fa-dragon zorathian-icon fa-2x"></i></a> <p>Zorathians</p><br>
+                                  <a  target="_blank" href="characters/bugs.html"> <i class="fa fa-bug fa-2x"></i></a> <p>Skarnex</p><br>
+                                   <a  target="_blank" href="characters/unknown.html"><i class="fas fa-question fa-2x"></i></a> <p>Unkown</p>
+                                
+                           
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+                        <div class="service-item d-flex flex-column text-center rounded">
+                            <div class="service-icon flex-shrink-0">
+                                <i class="fa fa-meteor fa-2x"></i>
+                            </div>
+                            <h5 class="mb-3">Planets</h5>
+                           <div class="m-0">
+                                <a  href="#planet"><img class="rmbg-icon" src="characters/images/purple1.png" alt="DNA Icon" width="32" height="32"></a><p>Velari</p><br>
+                                  <a  href="#planet"> <img class="rmbg-icon" src="characters/images/earth1.png" alt="DNA Icon" width="32" height="32"></a><p>Earth</p><br>
+                                 <a  href="#planet"><img class="rmbg-icon" src="characters/images/blueplanet1.png" alt="DNA Icon" width="32" height="32"></a><p>Zorath</p><br>
+                                 <a  href="#planet"> <img class="rmbg-icon" src="characters/images/techplanet1.png" alt="DNA Icon" width="32" height="32"></a><p>Synthara</p><br>
+                                   <a  href="#planet"> <img class="rmbg-icon" src="characters/images/fireplanet1.png" alt="DNA Icon" width="32" height="32"></a><p>Ashkar</p><br>
+                                    
+                            </div>  
+
+
+                            
+                           
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                        <div class="service-item d-flex flex-column text-center rounded">
+                            <div class="service-icon flex-shrink-0">
+                                <i class="fas fa-space-shuttle fa-2x"></i>
+                            </div>
+                            <h5 class="mb-3">Spaceships</h5>
+                            <div class="m-0">
+                                <a   onclick="openModal()"><img class="rmbg-icon"  src="characters/images/vorath1.png" alt="DNA Icon" width="32" height="32"></a><p>Vorath's Maw</p><br>
+                                   <a   onclick="openModal1()"><img class="rmbg-icon" src="characters/images/nytherion1.png" alt="DNA Icon" width="32" height="32"></a><p>Nytherion</p><br>
+                                <a   onclick="openModal2()"> <img class="rmbg-icon" src="characters/images/vorak1.png" alt="DNA Icon" width="32" height="32"></a><p>Vorrak'tel</p><br>
+                                  <a   onclick="openModal3()"><img class="rmbg-icon" src="characters/images/rocket1.png" alt="DNA Icon" width="32" height="32"></a><p>The Resolute</p><br>
+                                   <a  onclick="openModal4()"> <img class="rmbg-icon" src="characters/images/techship1.png" alt="DNA Icon" width="32" height="32"></a><p>The Sentinel</p><br>
+                                    
+                            </div>  
+                           
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        <!-- Service End -->
+         <!-- Service Start 111 -->
+        <div class="container-xxl py-5">
+            <div class="container py-5 px-lg-5">
+                <div class="wow fadeInUp" data-wow-delay="0.1s">
+                    <p class="section-title text-primary justify-content-center" id="comic"><span></span>Comics<span></span></p>
+                    <h1 class="text-center mb-5">Fun Comics </h1>
+                </div>
+                <div class="row g-4">
+                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                        <div class="service-item d-flex flex-column text-center rounded">
+                            <div class="service-icon flex-shrink-0">
+                                <i class="fa fa-person fa-2x"></i>
+                            </div>
+                            <h5 class="mb-3">Kalen’s Big Journey</h5>
+                            <p class="m-0">"From whispered dreams beneath Earth’s stars to the violet unknown, Kalen’s journey has truly begun."</p>
+                            <a class="btn btn-square" target="_blank" href="Comics/comic2.html"><i class="fa fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+                        <div class="service-item d-flex flex-column text-center rounded">
+                            <div class="service-icon flex-shrink-0">
+                                <i class="fa-solid fa-star-of-life velarian-icon fa-2x"></i>
+                            </div>
+                            <h5 class="mb-3">Kaelis</h5>
+                            <p class="m-0">Emotion Feelers</p>
+                            <a class="btn btn-square" target="_blank" href="Comics/comic3.html"><i class="fa fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                        <div class="service-item d-flex flex-column text-center rounded">
+                            <div class="service-icon flex-shrink-0">
+                                <i class="fa-solid fa-dragon zorathian-icon fa-2x"></i>
+                            </div>
+                            <h5 class="mb-3">Thalor</h5>
+                            <p class="m-0">A warriors Tale</p>
+                            <a class="btn btn-square" href="Comics/comic4.html"><i class="fa fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                        <div class="service-item d-flex flex-column text-center rounded">
+                            <div class="service-icon flex-shrink-0">
+                                <i class="fa-solid fa-star-of-life velarian-icon fa-2x"></i>
+                            </div>
+                            <h5 class="mb-3">The Legends Of Velari</h5>
+                            <p class="m-0">A series of comics about the adventures on Velari</p>
+                            <a class="btn btn-square" href="Comics/comic4.html"><i class="fa fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+                        <div class="service-item d-flex flex-column text-center rounded">
+                            <div class="service-icon flex-shrink-0">
+                                <i class="fa-solid fa-dragon zorathian-icon fa-2x"></i>
+                            </div>
+                            <h5 class="mb-3">Adventures On Zorath</h5>
+                            <p class="m-0">Stories from the Zorathians</p>
+                            <a class="btn btn-square" href=""><i class="fa fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                        <div class="service-item d-flex flex-column text-center rounded">
+                            <div class="service-icon flex-shrink-0">
+                                <i class="fa fa-meteor fa-2x"></i>
+                            </div>
+                            <h5 class="mb-3">Tales From The Galaxy</h5>
+                            <p class="m-0">Meet the characters of TAOLB</p>
+                            <a class="btn btn-square" href=""><i class="fa fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Service End -->
+        <!-- Service Start 2222 -->
+        <div class="container-xxl py-5">
+            <div class="container py-5 px-lg-5">
+                <div class="wow fadeInUp" data-wow-delay="0.1s">
+                    <p class="section-title text-primary justify-content-center" id="character"><span></span>Characters<span></span></p>
+                    <h1 class="text-center mb-5">Click the arrow to check each species out</h1>
+                </div>
+                <div class="row g-4">
+                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                        <div class="service-item d-flex flex-column text-center rounded">
+                            <div class="service-icon flex-shrink-0">
+                                <i class="fa fa-person fa-2x"></i>
+                            </div>
+                            <h5 class="mb-3">Humans</h5>
+                            <p class="m-0">Adaptive, emotional, and endlessly inventive, shaping worlds with heart and reason</p>
+                            <a class="btn btn-square" href="characters/humans.html"><i class="fa fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+                        <div class="service-item d-flex flex-column text-center rounded">
+                            <div class="service-icon flex-shrink-0">
+                                <i class="fa-solid fa-star-of-life velarian-icon fa-2x"></i>
+                            </div>
+                            <h5 class="mb-3">Velarians</h5>
+                            <p class="m-0">Violet skinned telepaths who speak through thought and sense the emotions woven beneath every word</p>
+                            <a class="btn btn-square" href="characters/Velari.html"><i class="fa fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                        <div class="service-item d-flex flex-column text-center rounded">
+                            <div class="service-icon flex-shrink-0">
+                                <i class="fa-solid fa-dragon zorathian-icon fa-2x"></i>
+                            </div>
+                            <h5 class="mb-3">Zorathians</h5>
+                            <p class="m-0">Blue scaled warriors born to the mist and ruled by instinct</p>
+                            <a class="btn btn-square" href="characters/zorathians.html"><i class="fa fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                        <div class="service-item d-flex flex-column text-center rounded">
+                            <div class="service-icon flex-shrink-0">
+                                <i class="fa fa-bug fa-2x"></i>
+                            </div>
+                            <h5 class="mb-3">Skarnex</h5>
+                            <p class="m-0">Speaking in clicks and marching to the rhythm of hive law</p>
+                            <a class="btn btn-square" href="characters/bugs.html"><i class="fa fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+                        <div class="service-item d-flex flex-column text-center rounded">
+                            <div class="service-icon flex-shrink-0">
+                                <i class="fa fa-moon fa-2x"></i>
+                            </div>
+                            <h5 class="mb-3">Coming Soon</h5>
+                            <p class="m-0">...............</p>
+                            <a class="btn btn-square" href=""><i class="fa fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                        <div class="service-item d-flex flex-column text-center rounded">
+                            <div class="service-icon flex-shrink-0">
+                                <i class="fas fa-question fa-2x"></i>
+                            </div>
+                            <h5 class="mb-3">Unknown Origin</h5>
+                            <p class="m-0">Characters of an unkown origin at this time</p>
+                            <a class="btn btn-square" href="characters/unknown.html"><i class="fa fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Service End -->
+         <!-- Service Start  333 -->
+        <div class="container-xxl py-5">
+            <div class="container py-5 px-lg-5">
+                <div class="wow fadeInUp" data-wow-delay="0.1s">
+                    <p class="section-title text-primary justify-content-center" id="planet"><span></span>Planets<span></span></p>
+                    <h1 class="text-center mb-5">Click The Planet</h1>
+                </div>
+                <div class="row g-4">
+                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                        <div class="service-item d-flex flex-column text-center rounded">
+                            
+                            <h5 class="mb-3">Earth</h5>
+                            <img src="characters/images/earth1.png" onclick="changeImage('earth')"  class="card-img-top " id="earth" style="transition: opacity 0.7s;"   alt="Planet Earth">
+                            <p class="m-0">The cradle of forgotten legends</p>
+                           
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+                        <div class="service-item d-flex flex-column text-center rounded">
+                           
+                            <h5 class="mb-3">Velari</h5>
+                            <img src="characters/images/purple1.png" onclick="changeImage('purple')"  class="card-img-top " id="purple" style="transition: opacity 0.5s;"   alt="A purple planet">
+                            <p class="m-0">A world where ruins whisper secrets and warriors rise from the mist
+</p>
+                           
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                        <div class="service-item d-flex flex-column text-center rounded">
+                            
+                            <h5 class="mb-3">Zorath</h5>
+                            <img src="characters/images/blueplanet1.png" onclick="changeImage('blue')" style="transition: opacity 0.8s;"  class="card-img-top " id="blue"   alt="A blue planet">
+                            <p class="m-0">Where sapphire, scaled beasts rule oceans of mist and skies thunder with primal memory</p>
+                            
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                        <div class="service-item d-flex flex-column text-center rounded">
+                           
+                            <h5 class="mb-3"> Synthara
+</h5>
+                            <img src="characters/images/techplanet1.png" onclick="changeImage('tech')" style="transition: opacity 0.4s;"  class="card-img-top " id="tech"   alt="A planet covered in technology">
+                            <p class="m-0">where thought becomes code and reality bends to innovation</p>
+                            
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+                        <div class="service-item d-flex flex-column text-center rounded">
+                           
+                            <h5 class="mb-3">Ashkar</h5>
+                            <img src="characters/images/fireplanet1.png" onclick="changeImage('fire')" style="transition: opacity 0.9s;"  class="card-img-top " id="fire"   alt="A blue planet">
+                            <p class="m-0">where molten skies roar and the ground trembles beneath the fury of flame-born titans</p>
+                           
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                        <div class="service-item d-flex flex-column text-center rounded">
+                            
+                            <h5 class="mb-3">Unknown</h5>
+                             <img src="characters/images/unknown1.png" onclick="changeImage('unknown')" style="transition: opacity 0.8s;"  class="card-img-top " id="unknown"   alt="">
+                            <p class="m-0">There is no data on this planet</p>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Service End -->
+         <!-- Service Start  444 -->
+        <div class="container-xxl py-5">
+            <div class="container py-5 px-lg-5">
+                <div class="wow fadeInUp" data-wow-delay="0.1s">
+                    <p class="section-title text-primary justify-content-center" id="spaceship"><span></span>Spaceships<span></span></p>
+                    <h1 class="text-center mb-5">Click the arrow to see their story</h1>
+                </div>
+                <div class="row g-4">
+                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                        <div class="service-item d-flex flex-column text-center rounded">
+                            <img src="characters/images/vorath1.png"   class="card-img-top " id="earth" style="transition: opacity 0.7s;"   alt="Planet Earth">
+                            
+                                <br>
+                            <h5 class="mb-3">Vorath's Maw</h5>
+                            <p class="m-0">Exiled genius. Bioengineered hive. A ship born from madness—discover the origin of Vorath’s Maw</p>
+                            <a class="btn btn-square"  onclick="openModal()"><i class="fa fa-arrow-right"></i></a>
+
+
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+                        <div class="service-item d-flex flex-column text-center rounded">
+                           <img src="characters/images/nytherion1.png"   class="card-img-top " id="earth" style="transition: opacity 0.7s;"   alt="Planet Earth">
+                           <br> <h5 class="mb-3">Nytherion</h5>
+                            <p class="m-0">Summoned from silence, Nytherion wasn’t built, it was born</p>
+                            <a class="btn btn-square"  onclick="openModal1()"><i class="fa fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                        <div class="service-item d-flex flex-column text-center rounded">
+                            <img src="characters/images/vorak1.png"   class="card-img-top " id="earth" style="transition: opacity 0.7s;"   alt="Planet Earth">
+                            <br><h5 class="mb-3">Vorrak'tel</h5>
+                            <p class="m-0">Forged in the heart of a dying star, Vorrak’tel was never built—it was extracted</p>
+                           <a class="btn btn-square"  onclick="openModal2()"><i class="fa fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                        <div class="service-item d-flex flex-column text-center rounded">
+                            <img src="characters/images/techship1.png"   class="card-img-top " id="earth" style="transition: opacity 0.7s;"   alt="Planet Earth">
+                            <br><h5 class="mb-3">The Resolute</h5>
+                            <p class="m-0">Pragmatic, brilliant, and utterly devoted to function over flair</p>
+                            <a class="btn btn-square"  onclick="openModal3()"><i class="fa fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+                        <div class="service-item d-flex flex-column text-center rounded">
+                            <img src="characters/images/rocket1.png"   class="card-img-top " id="earth" style="transition: opacity 0.7s;"   alt="Planet Earth">
+                            <br><h5 class="mb-3">The Sentinel</h5>
+                            <p class="m-0">It's not just a rocket<br>
+                                It's a door to a new world<br>
+                                It's a promise<br>
+                                It's The Sentinel
+                            </p>
+                           <a class="btn btn-square"  onclick="openModal4()"><i class="fa fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                        <div class="service-item d-flex flex-column text-center rounded">
+                            <div class="service-icon flex-shrink-0">
+                                <i class="fas fa-keyboard fa-2x"></i>
+                            </div>
+                            <h5 class="mb-3">Coming Soon</h5>
+                            <p class="m-0">??????</p>
+                            <a class="btn btn-square" href=""><i class="fa fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Service End -->
+
+        <!-- Footer Start -->
+        <div class="container-fluid bg-primary text-light footer wow fadeIn" data-wow-delay="0.1s">
+            <div class="container py-5 px-lg-5">
+                <div class="row g-5">
+                    <div class="col-md-6 col-lg-3">
+                        <p class="section-title text-white h5 mb-4">Address<span></span></p>
+                        <p><i class="fa fa-map-marker-alt me-3"></i>123 Street, New York, USA</p>
+                        <p><i class="fa fa-phone-alt me-3"></i>+012 345 67890</p>
+                        <p><i class="fa fa-envelope me-3"></i>info@example.com</p>
+                        <div class="d-flex pt-2">
+                            <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-twitter"></i></a>
+                            <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-facebook-f"></i></a>
+                            <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-instagram"></i></a>
+                            <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <p class="section-title text-white h5 mb-4">Quick Link<span></span></p>
+                        <a class="btn btn-link" href="">About Us</a>
+                        <a class="btn btn-link" href="">Contact Us</a>
+                        <a class="btn btn-link" href="">Privacy Policy</a>
+                        <a class="btn btn-link" href="">Terms & Condition</a>
+                        <a class="btn btn-link" href="">Career</a>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <p class="section-title text-white h5 mb-4">Gallery<span></span></p>
+                        <div class="row g-2">
+                            <div class="col-4">
+                                <img class="img-fluid" src="img/portfolio-1.jpg" alt="Image">
+                            </div>
+                            <div class="col-4">
+                                <img class="img-fluid" src="img/portfolio-2.jpg" alt="Image">
+                            </div>
+                            <div class="col-4">
+                                <img class="img-fluid" src="img/portfolio-3.jpg" alt="Image">
+                            </div>
+                            <div class="col-4">
+                                <img class="img-fluid" src="img/portfolio-4.jpg" alt="Image">
+                            </div>
+                            <div class="col-4">
+                                <img class="img-fluid" src="img/portfolio-5.jpg" alt="Image">
+                            </div>
+                            <div class="col-4">
+                                <img class="img-fluid" src="img/portfolio-6.jpg" alt="Image">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <p class="section-title text-white h5 mb-4">Newsletter<span></span></p>
+                        <p>Lorem ipsum dolor sit amet elit. Phasellus nec pretium mi. Curabitur facilisis ornare velit non vulpu</p>
+                        <div class="position-relative w-100 mt-3">
+                            <input class="form-control border-0 rounded-pill w-100 ps-4 pe-5" type="text" placeholder="Your Email" style="height: 48px;">
+                            <button type="button" class="btn shadow-none position-absolute top-0 end-0 mt-1 me-2"><i class="fa fa-paper-plane text-primary fs-4"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container px-lg-5">
+                <div class="copyright">
+                    <div class="row">
+                        <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                            &copy; <a class="border-bottom" href="#">Your Site Name</a>, All Right Reserved. 
+							
+							<!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
+							Designed By <a class="border-bottom" href="https://htmlcodex.com">HTML Codex</a><br><br> 
+                            Distributed By a <a class="border-bottom" href="https://themewagon.com" target="_blank">ThemeWagon</a>
+                        </div>
+                        <div class="col-md-6 text-center text-md-end">
+                            <div class="footer-menu">
+                                <a href="">Home</a>
+                                <a href="">Cookies</a>
+                                <a href="">Help</a>
+                                <a href="">FQAs</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Footer End -->
+
+        <!-- Modal -->
+<div id="customModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <h2>Vorath’s Maw</h2>
+    <p>Long ago, the Skarnex were a scattered race of scavengers, feeding on asteroid husks and derelict stations. That changed when Vorath, a rogue bio-engineer exiled from the Velarian Concord, crash-landed on a Skarnex moon. Obsessed with merging organic life and machine, Vorath used forbidden tech to uplift the Skarnex into a hive-mind species—his final experiment before being consumed by his own creation. Vorath’s Maw was built from the remains of his lab, fused with his DNA and consciousness. The ship is not just a vessel—it’s a living monument to their evolution and their first god.<br><br>
+
+<b>2. The Maw Awakens</b><br>
+The ship lay dormant for centuries, buried beneath the crust of the moon Khar’Zuun. When the Skarnex hive reached critical mass, the planet cracked open and Vorath’s Maw emerged, fully sentient and hungry. It didn’t just fly—it hunted. The ship’s mandibles tore through orbital defenses, and its claws dragged satellites into its belly for assimilation.<br><br>
+
+<b>3. The Hive’s Beacon</b><br>
+Vorath’s Maw now serves as the central nervous system of the Skarnex swarm. It emits a psychic pulse that keeps the hive synchronized across light-years. Wherever it travels, lesser Skarnex ships follow like insects to pheromones. Entire civilizations have gone mad from exposure to its signal, hearing whispers of Vorath’s voice in their dreams.<br><br>
+
+<b>4. The Velarian Prophecy</b><br>
+The Velarians—those sleek, serene architects of the stars—have long feared the return of Vorath’s creation. Their ancient texts speak of a “Maw of Memory” that will consume the stars unless “the tide-born flame” rises. Some believe this refers to a Velarian pilot destined to infiltrate and destroy the ship from within. Others think the prophecy is a trap laid by Vorath himself.<br><br>
+
+Want to expand this into a full galactic saga? I can help you build factions, battles, even a hero or villain to challenge the Maw. Let’s make this universe unforgettable.</p>
+    
+  </div>
+</div>
+<div id="customModal1" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal1()">&times;</span>
+    <h2>Nytherion
+</h2>
+    <p>Long before the Velarians mastered telepathy, there was only the Void—a realm of pure thought and emotion. Nytherion was not built, but summoned from that silence by the first Velarian empath, Serai Veyna, during a celestial convergence known as the Veilfall. It emerged fully formed, its hull etched with patterns no tool could replicate, its systems responding to emotion rather than code
+</p>
+    
+  </div>
+</div>
+<div id="customModal2" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal2()">&times;</span>
+    <h2>Vorrak’tel
+</h2>
+    <p>Vorrak’tel was not assembled—it was extracted. Deep within the collapsing core of the black star Xerathuun, Zorathian engineers discovered a crystalline anomaly pulsing with sentient energy. They built the ship around it, not knowing whether they were crafting a vessel… or a prison
+</p>
+    
+  </div>
+</div>
+<div id="customModal3" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal3()">&times;</span>
+    <h2>The Resolute
+</h2>
+    <p>It wasn’t designed to impress. It was designed to end dependency. With modular cargo bays, self-repairing hull segments, and a propulsion system that recycles gravitational stress, The Resolute can haul entire ecosystems across star systems with minimal fuel consumption.<br><br>
+Its AI core, VEX-9, doesn’t speak in metaphors. It speaks in metrics. And it never sleeps.<br><br>
+The ship’s maiden voyage was a test: a 12-planet supply run across the volatile Tarn Rift, where solar storms shred lesser vessels. The Resolute returned not only intact—but ahead of schedule, with surplus energy and zero crew casualties.<br><br>
+Since then, it’s become a symbol—not of Karnari pride, but of their philosophy: Efficiency is elegance. Precision is power.
+</p>
+    
+  </div>
+</div>
+<div id="customModal4" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal4()">&times;</span>
+    <h2>The Sentinel
+</h2>
+    <p>Kalen Vire was born in the twilight of Earth’s ambition. His world had long abandoned space travel, deeming it a relic of a reckless past. The skies were quiet, the launchpads rusted, and the stars were just distant lights—romantic, unreachable.
+<br><br>But Kalen was different.<br><br>
+From childhood, he devoured ancient star charts, built crude telescopes from salvaged glass, and scribbled equations on the backs of ration slips. His obsession wasn’t fame or conquest—it was connection. He believed the universe was alive, waiting to be known.
+<br>Yet the world mocked him. “There’s nothing out there,” they said. “We have enough problems down here.” <br><br>
+So he built in secret.<br><br>
+In a forgotten cavern beneath the ruins of an old observatory, Kalen spent decades crafting a vessel—not from metal, but from bio-synthetic tissue, quantum-threaded bone, and neural plasma. He wasn’t building a rocket. He was building a body. One that could survive the void, think faster than light, and carry his consciousness across galaxies.
+<br><br>He called it The Sentinel—not as a weapon, but as a witness. A man reborn as a living ship, forged not by a government, but by longing.
+<br><br>When he finally launched, there was no crowd. No countdown. Just silence… and then a streak of light across the sky.
+<br><br>Kalen didn’t leave Earth to escape it.
+He left to remind it what it had forgotten:
+That the stars are not beyond us.
+They are within us.
+</p>
+    
+  </div>
+</div>
+
+        <!-- Back to Top -->
+        <a href="#" class="btn btn-lg btn-secondary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/wow/wow.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/waypoints/waypoints.min.js"></script>
+    <script src="lib/counterup/counterup.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="lib/isotope/isotope.pkgd.min.js"></script>
+    <script src="lib/lightbox/js/lightbox.min.js"></script>
+<script>
+  // Define image pairs for each character
+  const imageMap = {
+    purple: ["characters/images/purple1.png", "characters/images/purple2.png"],
+    blue: ["characters/images/blueplanet1.png", "characters/images/blueplanet2.png"],
+    earth: ["characters/images/earth1.png", "characters/images/earth2.png"],
+    unknown: ["characters/images/unknown1.png", "characters/images/unknown2.png"],
+    tech: ["characters/images/techplanet1.png", "characters/images/techplanet2.png"],
+    fire: ["characters/images/fireplanet1.png", "characters/images/fireplanet2.png"]
+  };
+
+  // Track which image is showing for each character
+  const showingFirst = {
+    purple: true,
+    blue: true,
+    earth: true,
+    unknown: true,
+    tech: true,
+     fire: true
+  };
+
+  function changeImage(id) {
+    const img = document.getElementById(id);
+    img.style.opacity = 0;
+
+    setTimeout(() => {
+      const images = imageMap[id];
+      img.src = showingFirst[id] ? images[1] : images[0];
+      showingFirst[id] = !showingFirst[id];
+      img.style.opacity = 1;
+    }, 500);
+  }
+  function openModal() {
+  document.getElementById("customModal").style.display = "block";
+}
+
+function closeModal() {
+  document.getElementById("customModal").style.display = "none";
+}
+
+ function openModal1() {
+  document.getElementById("customModal1").style.display = "block";
+}
+
+function closeModal1() {
+  document.getElementById("customModal1").style.display = "none";
+}
+function openModal2() {
+  document.getElementById("customModal2").style.display = "block";
+}
+
+function closeModal2() {
+  document.getElementById("customModal2").style.display = "none";
+}
+function openModal3() {
+  document.getElementById("customModal3").style.display = "block";
+}
+function closeModal3() {
+  document.getElementById("customModal3").style.display = "none";
+}
+function openModal4() {
+  document.getElementById("customModal4").style.display = "block";
+}
+function closeModal4() {
+  document.getElementById("customModal4").style.display = "none";
+}
+</script>
+
+
+
+
+
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
+</body>
+
+</html>

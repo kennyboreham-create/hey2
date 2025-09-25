@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Liora's Mythic Word Search 3</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      height: 100vh;
+      background-color: #0b3d91;
+      color: white;
+    }
+
+    .sidebar {
+      width: 200px;
+      background-color: #fff;
+      color: #0b3d91;
+      padding: 20px;
+      border-right: 5px solid black;
+    }
+
+    .sidebar h2 {
+      margin-bottom: 10px;
+    }
+
+    .word-list li {
+      margin: 10px 0;
+      font-size: 18px;
+    }
+
+    .word-list .found {
+      text-decoration: line-through;
+      color: gray;
+    }
+
+    .grid {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(8, 50px);
+      grid-template-rows: repeat(8, 50px);
+      gap: 5px;
+      justify-content: center;
+      align-content: center;
+      padding: 20px;
+    }
+
+    .cell {
+      background-color: white;
+      color: #0b3d91;
+      font-weight: bold;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .cell.selected {
+      background-color: #ffe066;
+    }
+
+    .cell.found {
+      background-color: #4caf50;
+      color: white;
+    }
+    #profilePic {
+  width: 80px;              /* Adjust size to fit your navbar */
+  height: 80px;
+  object-fit: cover;        /* Ensures the image fills the box */
+  border: 4px solid black;  /* Black border */
+  border-radius: 50%;       /* Makes it circular */
+  margin-bottom: 20px;      /* Adds spacing below */
+}
+  </style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <h3>Liora's Mythic Word Search 3</h3>
+    <h5>Find These Words:</h5>
+    <ul class="word-list" id="wordList">
+      <li>PUZZLE</li>
+      <li>RESPECT</li>
+      <li>EFFORT</li>
+      <li>NOTICE</li>
+      <li>HONEST</li>
+      <li>ACTIVE</li>
+    </ul><br><br>
+    <img id="profilePic" src="../../characters/images/liora1.png" alt="Profile Picture" />
+    
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <script>
+    const words = ["PUZZLE", "RESPECT", "EFFORT", "NOTICE", "HONEST", "ACTICE"];
+    const gridSize = 8;
+    const grid = document.getElementById("grid");
+    const wordList = document.getElementById("wordList").children;
+    let cells = [];
+    let selectedCells = [];
+
+    // Create grid
+    for (let i = 0; i < gridSize * gridSize; i++) {
+      const cell = document.createElement("div");
+      cell.classList.add("cell");
+      cell.dataset.index = i;
+      grid.appendChild(cell);
+      cells.push(cell);
+    }
+
+    // Place words horizontally
+    function placeWords() {
+      words.forEach(word => {
+        let placed = false;
+        while (!placed) {
+          const row = Math.floor(Math.random() * gridSize);
+          const col = Math.floor(Math.random() * (gridSize - word.length));
+          let fits = true;
+
+          for (let i = 0; i < word.length; i++) {
+            const index = row * gridSize + col + i;
+            if (cells[index].textContent) {
+              fits = false;
+              break;
+            }
+          }
+
+          if (fits) {
+            for (let i = 0; i < word.length; i++) {
+              const index = row * gridSize + col + i;
+              cells[index].textContent = word[i];
+              cells[index].dataset.word = word;
+              cells[index].dataset.part = i;
+            }
+            placed = true;
+          }
+        }
+      });
+    }
+
+    // Fill remaining cells with random letters
+    function fillGrid() {
+      const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      cells.forEach(cell => {
+        if (!cell.textContent) {
+          cell.textContent = letters[Math.floor(Math.random() * letters.length)];
+        }
+      });
+    }
+
+    placeWords();
+    fillGrid();
+    window.onload = () => {
+  alert("🔮 Welcome to Liora's Mythic Word Search 3!\n\nClick and drag across letters to highlight a word.\nFind all 6 to win!");
+};
+
+    // Selection logic
+    let isMouseDown = false;
+
+    grid.addEventListener("mousedown", e => {
+      if (e.target.classList.contains("cell")) {
+        isMouseDown = true;
+        selectedCells = [e.target];
+        e.target.classList.add("selected");
+      }
+    });
+
+    grid.addEventListener("mouseover", e => {
+      if (isMouseDown && e.target.classList.contains("cell") && !selectedCells.includes(e.target)) {
+        selectedCells.push(e.target);
+        e.target.classList.add("selected");
+      }
+    });
+
+    document.addEventListener("mouseup", () => {
+  if (selectedCells.length > 0) {
+    const selectedWord = selectedCells.map(c => c.textContent).join("");
+    if (words.includes(selectedWord)) {
+      selectedCells.forEach(c => c.classList.remove("selected"));
+      selectedCells.forEach(c => c.classList.add("found"));
+      for (let li of wordList) {
+        if (li.textContent === selectedWord) {
+          li.classList.add("found");
+        }
+      }
+
+      // ✅ Check if all words are found
+      let foundCount = 0;
+      for (let li of wordList) {
+        if (li.classList.contains("found")) {
+          foundCount++;
+        }
+      }
+
+      if (foundCount === words.length) {
+        confetti({
+          particleCount: 150,
+          spread: 70,
+          origin: { y: 0.6 }
+        });
+
+        setTimeout(() => {
+          alert("🎉 Congrats! Level 3 complete!");
+          location.reload();
+        }, 500);
+      }
+
+    } else {
+      selectedCells.forEach(c => c.classList.remove("selected"));
+    }
+    selectedCells = [];
+  }
+  isMouseDown = false;
+});
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Math Array</title>
+</head>
+<body>
+  <ul id="mathList"></ul>
+
+  <script>
+    const mathList = document.getElementById("mathList");
+
+    for (let i = 1; i <= 100; i++) {
+      const listItem = document.createElement("li");
+      listItem.textContent = `${i} + ${i} = ${i + i}`;
+      mathList.appendChild(listItem);
+    }
+  </script>
+</body>
+</html>

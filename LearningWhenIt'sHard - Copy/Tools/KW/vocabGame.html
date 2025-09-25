@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mivra's Vocabulary Challenge</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; margin-top: 80px; background: goldenrod; }
+    .question { font-size: 24px; margin-bottom: 20px; }
+    button { padding: 12px 20px; margin: 8px; font-size: 18px; cursor: pointer; }
+    #result { font-size: 20px; margin-top: 20px; font-weight: bold; color: #0077cc; }
+  </style>
+</head>
+<body>
+  <h1>Mivra's Vocabulary Game</h1>
+  <div class="question" id="questionText">What does the word “honest” mean?</div>
+  <div id="choices">
+    <button onclick="checkAnswer('A')">A. Not telling the truth</button>
+    <button onclick="checkAnswer('B')">B. Telling the truth</button>
+    <button onclick="checkAnswer('C')">C. Running fast</button>
+  </div>
+  <div id="result"></div>
+
+  <script>
+   const questions = [
+  { word: "honest", correct: "B", options: { A: "Not telling the truth", B: "Telling the truth", C: "Running fast" } },
+  { word: "brave", correct: "A", options: { A: "Showing courage", B: "Feeling tired", C: "Being dishonest" } },
+  { word: "generous", correct: "C", options: { A: "Being rude", B: "Keeping everything", C: "Willing to give" } },
+  { word: "timid", correct: "A", options: { A: "Shy or fearful", B: "Very loud", C: "Extremely brave" } },
+  { word: "ancient", correct: "B", options: { A: "Brand new", B: "Very old", C: "Fast-moving" } },
+  { word: "clever", correct: "C", options: { A: "Not smart", B: "Always tired", C: "Quick to learn" } },
+  { word: "fragile", correct: "A", options: { A: "Easily broken", B: "Very strong", C: "Hard to carry" } },
+  { word: "grumpy", correct: "B", options: { A: "Always smiling", B: "Bad-tempered", C: "Very sleepy" } },
+  { word: "drowsy", correct: "C", options: { A: "Wide awake", B: "Running fast", C: "Sleepy" } },
+  { word: "polite", correct: "A", options: { A: "Showing good manners", B: "Interrupting others", C: "Being rude" } },
+  { word: "fierce", correct: "B", options: { A: "Gentle and calm", B: "Violent or intense", C: "Very quiet" } },
+  { word: "silent", correct: "C", options: { A: "Very loud", B: "Always talking", C: "Without sound" } },
+  { word: "massive", correct: "A", options: { A: "Very large", B: "Tiny", C: "Lightweight" } },
+  { word: "swift", correct: "B", options: { A: "Slow", B: "Fast", C: "Sticky" } },
+  { word: "bright", correct: "C", options: { A: "Very dark", B: "Hard to see", C: "Full of light" } },
+  { word: "calm", correct: "A", options: { A: "Peaceful", B: "Angry", C: "Excited" } },
+  { word: "noisy", correct: "B", options: { A: "Very quiet", B: "Loud", C: "Invisible" } },
+  { word: "tiny", correct: "C", options: { A: "Huge", B: "Average size", C: "Very small" } },
+  { word: "hungry", correct: "A", options: { A: "Needing food", B: "Feeling sleepy", C: "Full of energy" } },
+  { word: "friendly", correct: "B", options: { A: "Mean", B: "Kind and helpful", C: "Scary" } }
+];
+
+    let currentLevel = 0;
+
+    function loadQuestion() {
+      const q = questions[currentLevel];
+      document.getElementById("questionText").textContent = `What does the word “${q.word}” mean?`;
+      const choicesDiv = document.getElementById("choices");
+      choicesDiv.innerHTML = "";
+      for (const key in q.options) {
+        const btn = document.createElement("button");
+        btn.textContent = `${key}. ${q.options[key]}`;
+        btn.onclick = () => checkAnswer(key);
+        choicesDiv.appendChild(btn);
+      }
+    }
+
+    function checkAnswer(choice) {
+      const q = questions[currentLevel];
+      const result = document.getElementById("result");
+      if (choice === q.correct) {
+        result.textContent = "🎉 Correct!";
+        currentLevel++;
+        if (currentLevel < questions.length) {
+          setTimeout(() => {
+            result.textContent = "";
+            loadQuestion();
+          }, 1000);
+        } else {
+          result.textContent = "🏆 You've completed all levels and beat Mivra!";
+        }
+      } else {
+        result.textContent = "❌ Try again.";
+      }
+    }
+
+    // Load the first question
+    loadQuestion();
+  </script>
+</body>
+</html>

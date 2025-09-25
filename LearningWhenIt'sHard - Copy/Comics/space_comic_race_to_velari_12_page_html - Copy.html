@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Race to Velari — A Mini Comic</title>
+  <style>
+    :root{
+      --bg:#0b0f1a;        /* starry-night */
+      --fg:#eef2ff;        /* soft white */
+      --accent:#8b5cf6;    /* velari purple */
+      --muted:#94a3b8;     /* slate */
+      --btn:#111827;       /* button base */
+      --btnHover:#1f2937;  /* button hover */
+      --panel:#0f172a;     /* panel bg */
+      --shadow: 0 20px 40px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Helvetica, Arial, sans-serif;
+      background: radial-gradient(1200px 600px at 70% 20%, #0f1b2f 0%, var(--bg) 60%);
+      color:var(--fg);
+      display:grid; place-items:center;
+    }
+    .app{
+      width:min(1000px, 96vw);
+      height:min(680px, 92vh);
+      background:linear-gradient(180deg, #0b1324 0%, #0b0f1a 100%);
+      border:1px solid #1e293b; border-radius:24px; box-shadow:var(--shadow);
+      display:grid; grid-template-rows:auto 1fr auto; overflow:hidden;
+    }
+    header{
+      padding:18px 22px; display:flex; align-items:center; justify-content:space-between;
+      border-bottom:1px solid #1e293b; background:rgba(15,23,42,.6); backdrop-filter: blur(6px);
+    }
+    header h1{font-size:clamp(18px, 2.6vw, 26px); margin:0; letter-spacing:.5px}
+    header .meta{font-size:14px; color:var(--muted)}
+
+    .stage{
+      position:relative; overflow:hidden; background:var(--panel);
+      display:grid; grid-template-columns: 72px 1fr 72px; align-items:stretch;
+    }
+    .panel{
+      position:relative; padding:0; display:grid; place-items:center; overflow:hidden;
+    }
+    .panel svg{width:100%; height:100%; display:block; background:#05070f}
+
+    .navBtn{
+      display:grid; place-items:center; cursor:pointer; border:none; outline:3px solid transparent;
+      background:transparent; color:var(--fg); transition: .2s ease transform, .2s ease background;
+    }
+    .navBtn:hover{background:rgba(255,255,255,.04)}
+    .navBtn:active{transform:scale(.96)}
+
+    .navBtn .chev{
+      width:52px; height:52px; border-radius:16px; display:grid; place-items:center; border:1px solid #263147;
+      background:linear-gradient(180deg, #0b1222, #0b0f1a); box-shadow: inset 0 0 0 1px rgba(255,255,255,.04);
+    }
+    .navBtn svg{width:28px; height:28px}
+
+    footer{
+      padding:14px 20px; display:flex; align-items:center; justify-content:space-between; gap:12px;
+      border-top:1px solid #1e293b; background:rgba(15,23,42,.6); backdrop-filter: blur(6px);
+      font-size:15px;
+    }
+    .caption{color:#cbd5e1}
+    .pageDots{display:flex; gap:6px; align-items:center; flex-wrap:wrap}
+    .dot{
+      width:9px; height:9px; border-radius:50%; background:#263147; transition:transform .2s ease, background .2s ease;
+    }
+    .dot.active{background:var(--accent); transform:scale(1.35)}
+    .pageLabel{color:var(--muted); font-variant-numeric: tabular-nums}
+
+    .kbd{font: 600 12px ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; padding:2px 6px; border-radius:6px; border:1px solid #334155; background:#0b1222; color:#e2e8f0}
+
+    /* Small screens */
+    @media (max-width:720px){
+      .stage{grid-template-columns: 56px 1fr 56px}
+      .navBtn .chev{width:44px; height:44px}
+      .navBtn svg{width:22px; height:22px}
+      footer{font-size:14px}
+    }
+  </style>
+</head>
+<body>
+  <div class="app" aria-live="polite">
+    <header>
+      <h1>Race to Velari</h1>
+      <div class="meta">A 12‑page mini comic for kids (with a sprinkle of cosmic humor)</div>
+    </header>
+
+    <section class="stage" id="stage">
+      <button class="navBtn" id="prevBtn" aria-label="Previous page">
+        <div class="chev" aria-hidden="true"> 
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15 5L8 12L15 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </button>
+
+      <figure class="panel" id="panel" aria-label="Comic panel" role="group"></figure>
+
+      <button class="navBtn" id="nextBtn" aria-label="Next page">
+        <div class="chev" aria-hidden="true"> 
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 5L16 12L9 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </button>
+    </section>
+
+    <footer>
+      <div class="caption" id="caption">Loading…</div>
+      <div style="display:flex; align-items:center; gap:12px;">
+        <div class="pageDots" id="dots" aria-hidden="true"></div>
+        <div class="pageLabel" id="pageLabel">1 / 12</div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // --- Simple starfield generator reused across scenes ---
+    function makeStars(count, w, h){
+      const rnd = n=> Math.random()*n;
+      let stars = '';
+      for(let i=0;i<count;i++){
+        const x = rnd(w).toFixed(1);
+        const y = rnd(h).toFixed(1);
+        const r = (Math.random()*1.4+0.3).toFixed(2);
+        const o = (Math.random()*0.8+0.2).toFixed(2);
+        stars += `<circle cx="${x}" cy="${y}" r="${r}" fill="white" opacity="${o}"/>`;
+      }
+      return stars;
+    }
+
+    // --- Character and prop snippets (SVG fragments) ---
+    const Ava = (x,y,scale=1)=>`
+      <g transform="translate(${x} ${y}) scale(${scale})">
+        <circle cx="0" cy="0" r="18" fill="#ffd9a6"/>
+        <circle cx="-6" cy="-2" r="2" fill="#111"/>
+        <circle cx="6" cy="-2" r="2" fill="#111"/>
+        <path d="M-7 7 Q0 13 7 7" stroke="#111" stroke-width="2" fill="none"/>
+        <path d="M-20 -10 Q0 -26 20 -10" fill="#ff4d6d"/>
+      </g>`;
+
+    const Max = (x,y,scale=1)=>`
+      <g transform="translate(${x} ${y}) scale(${scale})">
+        <rect x="-16" y="-16" width="32" height="32" rx="6" fill="#ffd9a6"/>
+        <circle cx="-6" cy="-4" r="2" fill="#111"/>
+        <circle cx="6" cy="-4" r="2" fill="#111"/>
+        <path d="M-8 8 Q0 14 8 8" stroke="#111" stroke-width="2" fill="none"/>
+        <path d="M-20 -18 h40 v10 h-40z" fill="#22c55e"/>
+      </g>`;
+
+    const Ship = (x,y,scale=1)=>`
+      <g transform="translate(${x} ${y}) scale(${scale})">
+        <defs>
+          <linearGradient id="shipB" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#e2e8f0"/>
+            <stop offset="100%" stop-color="#94a3b8"/>
+          </linearGradient>
+          <linearGradient id="flame" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#fbbf24"/>
+            <stop offset="100%" stop-color="#ef4444"/>
+          </linearGradient>
+        </defs>
+        <ellipse cx="0" cy="0" rx="80" ry="28" fill="url(#shipB)"/>
+        <rect x="-46" y="-18" width="92" height="18" rx="9" fill="#38bdf8" opacity=".8"/>
+        <ellipse cx="-70" cy="4" rx="16" ry="8" fill="url(#flame)"/>
+        <ellipse cx="-85" cy="4" rx="8" ry="4" fill="#f59e0b" opacity=".8"/>
+        <circle cx="40" cy="2" r="4" fill="#0ea5e9"/>
+      </g>`;
+
+    const Velari = (x,y,r=110)=>`
+      <g transform="translate(${x} ${y})">
+        <defs>
+          <radialGradient id="vCore" cx="50%" cy="40%" r="60%">
+            <stop offset="0%" stop-color="#c084fc"/>
+            <stop offset="60%" stop-color="#8b5cf6"/>
+            <stop offset="100%" stop-color="#5b21b6"/>
+          </radialGradient>
+        </defs>
+        <circle cx="0" cy="0" r="${r}" fill="url(#vCore)"/>
+        <g opacity=".25" fill="#fff">
+          <ellipse cx="-20" cy="-20" rx="${r*0.7}" ry="${r*0.18}" fill="#d8b4fe"/>
+          <ellipse cx="30" cy="10" rx="${r*0.55}" ry="${r*0.14}" fill="#a78bfa"/>
+        </g>
+      </g>`;
+
+    const Jelly = (x,y,scale=1)=>`
+      <g transform="translate(${x} ${y}) scale(${scale})">
+        <path d="M0 -20 C 20 -40, 40 -10, 30 10 C 25 25, -25 25, -30 10 C -40 -10, -20 -40, 0 -20" fill="#60a5fa" opacity=".8"/>
+        <g stroke="#60a5fa" stroke-width="2" fill="none" opacity=".9">
+          <path d="M-15 20 C -15 35, -25 45, -30 55"/>
+          <path d="M-5 22 C -5 37, -10 48, -14 58"/>
+          <path d="M 5 22 C 5 38, 12 50, 16 60"/>
+          <path d="M 15 20 C 15 36, 25 48, 30 58"/>
+        </g>
+        <circle cx="-6" cy="-8" r="2" fill="#111"/>
+        <circle cx="6" cy="-8" r="2" fill="#111"/>
+      </g>`;
+
+    const Rock = (x,y,s)=>`<ellipse cx="${x}" cy="${y}" rx="${s}" ry="${s*0.7}" fill="#64748b"/>`;
+
+    // --- Scenes (12 pages) ---
+    const pages = [
+      {
+        title: "Page 1 — Countdowns & Cornflakes",
+        caption: "Ava and Max finish breakfast at Starport 7. The rocket asks, ‘Did you pack snacks?’ Max: ‘Only the important ones.’",
+        art: () => baseScene(({W,H}) => `
+          <rect width="100%" height="100%" fill="#0a0f1c"/>
+          ${makeStars(180,W,H)}
+          ${Ship(W*0.62, H*0.55, 0.9)}
+          ${Ava(W*0.43, H*0.60, 1)}
+          ${Max(W*0.49, H*0.62, 1)}
+          <text x="40" y="60" fill="#e2e8f0" font-size="26" font-weight="700">STARPORT 7</text>
+          <text x="40" y="92" fill="#cbd5e1" font-size="16">T‑minus tasty cereal</text>
+        `)
+      },
+      {
+        title: "Page 2 — Lift‑off!",
+        caption: "Engines roar. Ava: ‘We’re off!’ Max: ‘Wait, where’s my toothbrush?’ — Rocket: ‘Emergency mint sprayer armed.’",
+        art: () => baseScene(({W,H}) => `
+          <rect width="100%" height="100%" fill="#070b14"/>
+          ${makeStars(140,W,H)}
+          ${Ship(W*0.5, H*0.55, 1)}
+          <g>
+            <rect x="${W*0.48-8}" y="${H*0.55+26}" width="16" height="60" fill="#ef4444" opacity=".5"/>
+            <rect x="${W*0.48+12}" y="${H*0.55+26}" width="16" height="60" fill="#f59e0b" opacity=".5"/>
+          </g>
+        `)
+      },
+      {
+        title: "Page 3 — Snack Drift",
+        caption: "Zero‑gravity test: a bag of chips performs a perfect orbit around Max’s head. Ava: ‘Science!’",
+        art: () => baseScene(({W,H}) => `
+          <rect width="100%" height="100%" fill="#060a12"/>
+          ${makeStars(160,W,H)}
+          ${Ship(W*0.5, H*0.52, 1)}
+          ${Max(W*0.62, H*0.48, 0.9)}
+          ${Ava(W*0.40, H*0.50, 0.9)}
+          <ellipse cx="${W*0.62+28}" cy="${H*0.48-20}" rx="14" ry="9" fill="#f59e0b"/>
+          <text x="${W*0.62+18}" y="${H*0.48-30}" fill="#111" font-size="10" font-weight="700">CHIPS</text>
+        `)
+      },
+      {
+        title: "Page 4 — Mystery Ping",
+        caption: "A blip on the radio: ‘V‑v‑Velari calling!’ Max: ‘Did the planet just call us?’",
+        art: () => baseScene(({W,H}) => `
+          <rect width="100%" height="100%" fill="#070c17"/>
+          ${makeStars(150,W,H)}
+          ${Ship(W*0.5, H*0.55, 1)}
+          <g opacity=".8">
+            <circle cx="${W*0.78}" cy="${H*0.22}" r="4" fill="#22d3ee"/>
+            <circle cx="${W*0.78}" cy="${H*0.22}" r="12" fill="none" stroke="#22d3ee"/>
+            <circle cx="${W*0.78}" cy="${H*0.22}" r="22" fill="none" stroke="#22d3ee"/>
+          </g>
+        `)
+      },
+      {
+        title: "Page 5 — Hyper‑Whoosh",
+        caption: "They punch the hyperdrive. Ava: ‘Hold your socks!’ Max: ‘Too late!’ (one sock flies by.)",
+        art: () => baseScene(({W,H}) => `
+          <defs>
+            <linearGradient id="warp" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#111827"/>
+              <stop offset="100%" stop-color="#0b1224"/>
+            </linearGradient>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#warp)"/>
+          ${Array.from({length:120}).map(()=>{
+            const x = Math.random()*W; const len = Math.random()*160+60; const y = Math.random()*H;
+            return `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="2" height="${len.toFixed(1)}" fill="#e5e7eb" opacity="${(Math.random()*0.5+0.2).toFixed(2)}"/>`;
+          }).join('')}
+          ${Ship(W*0.45, H*0.5, 1)}
+          <rect x="${W*0.7}" y="${H*0.45}" width="8" height="18" rx="2" fill="#e2e8f0"/>
+        `)
+      },
+      {
+        title: "Page 6 — Engine Hiccup",
+        caption: "The ship hiccups. Every hiccup shoots a tiny bubble. Ava: ‘Cute. Also… alarming.’",
+        art: () => baseScene(({W,H}) => `
+          <rect width="100%" height="100%" fill="#080c15"/>
+          ${makeStars(170,W,H)}
+          ${Ship(W*0.46, H*0.55, 1)}
+          ${Array.from({length:10}).map((_,i)=>{
+            const x = W*0.36 - i*20; const y = H*0.55 + Math.sin(i)*10; const r = 8 - i*0.6;
+            return `<circle cx="${x}" cy="${y}" r="${r}" fill="#93c5fd" opacity="${1-i*0.08}"/>`;
+          }).join('')}
+        `)
+      },
+      {
+        title: "Page 7 — Cosmic Jellyfish",
+        caption: "A friendly space‑jelly floats by and waves with a tentacle. Max waves back. Everyone is unreasonably polite.",
+        art: () => baseScene(({W,H}) => `
+          <rect width="100%" height="100%" fill="#070b14"/>
+          ${makeStars(180,W,H)}
+          ${Jelly(W*0.72, H*0.38, 1.2)}
+          ${Ship(W*0.38, H*0.58, 0.9)}
+        `)
+      },
+      {
+        title: "Page 8 — Meteor Mambo",
+        caption: "A slow meteor dance. Ava: ‘Left!’ Max: ‘Other left!’ Rocks disagree but miss anyway.",
+        art: () => baseScene(({W,H}) => `
+          <rect width="100%" height="100%" fill="#060a12"/>
+          ${makeStars(120,W,H)}
+          ${Ship(W*0.52, H*0.52, 0.9)}
+          ${Rock(W*0.2, H*0.3, 26)}
+          ${Rock(W*0.85, H*0.5, 18)}
+          ${Rock(W*0.65, H*0.22, 12)}
+          ${Rock(W*0.35, H*0.76, 22)}
+        `)
+      },
+      {
+        title: "Page 9 — Purple on the Horizon",
+        caption: "A glow ahead. The radio whispers: ‘Welcome… travelers.’ Max: ‘That planet just texted us again.’",
+        art: () => baseScene(({W,H}) => `
+          <rect width="100%" height="100%" fill="#070c17"/>
+          ${makeStars(120,W,H)}
+          ${Ship(W*0.38, H*0.55, 0.9)}
+          ${Velari(W*0.78, H*0.46, 130)}
+        `)
+      },
+      {
+        title: "Page 10 — Orbit of Velari",
+        caption: "Velari fills the window, all violets and rings. Ava: ‘It’s like a giant blueberry with Wi‑Fi.’",
+        art: () => baseScene(({W,H}) => `
+          <rect width="100%" height="100%" fill="#090d18"/>
+          ${makeStars(100,W,H)}
+          ${Velari(W*0.55, H*0.55, 170)}
+          ${Ship(W*0.25, H*0.46, 0.8)}
+        `)
+      },
+      {
+        title: "Page 11 — Squish‑Landing",
+        caption: "They land on a soft, bouncy field that goes ‘boing’ politely. Max: ‘The ground just high‑fived my shoes.’",
+        art: () => baseScene(({W,H}) => `
+          <defs>
+            <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#a78bfa"/>
+              <stop offset="100%" stop-color="#6d28d9"/>
+            </linearGradient>
+          </defs>
+          <rect width="100%" height="100%" fill="#120a1e"/>
+          ${makeStars(60,W,H)}
+          <rect x="0" y="${H*0.60}" width="100%" height="${H*0.4}" fill="url(#ground)"/>
+          ${Ship(W*0.30, H*0.50, 0.8)}
+          ${Ava(W*0.58, H*0.63, 1)}
+          ${Max(W*0.66, H*0.64, 1)}
+        `)
+      },
+      {
+        title: "Page 12 — Hello, Velari!",
+        caption: "Purple folk greet them with snacks that taste like grape‑flavored sunshine. Planet Velari: ‘Welcome, friends.’ The adventure begins…",
+        art: () => baseScene(({W,H}) => `
+          <defs>
+            <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#6d28d9"/>
+              <stop offset="100%" stop-color="#4c1d95"/>
+            </linearGradient>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#sky)"/>
+          <g opacity=".25">${makeStars(40,W,H)}</g>
+          <rect x="0" y="${H*0.65}" width="100%" height="${H*0.35}" fill="#7c3aed"/>
+          ${Ava(W*0.34, H*0.58, 1)}
+          ${Max(W*0.46, H*0.60, 1)}
+          <!-- Velarians -->
+          <g>
+            <g transform="translate(${W*0.68} ${H*0.58})">
+              <circle cx="0" cy="0" r="18" fill="#c084fc"/>
+              <rect x="-12" y="18" width="24" height="14" rx="6" fill="#a78bfa"/>
+              <circle cx="-6" cy="-2" r="3" fill="#111"/>
+              <circle cx="6" cy="-2" r="3" fill="#111"/>
+              <path d="M-6 8 Q0 14 6 8" stroke="#111" stroke-width="2" fill="none"/>
+            </g>
+            <g transform="translate(${W*0.80} ${H*0.61}) scale(0.9)">
+              <circle cx="0" cy="0" r="18" fill="#c084fc"/>
+              <rect x="-12" y="18" width="24" height="14" rx="6" fill="#a78bfa"/>
+              <circle cx="-6" cy="-2" r="3" fill="#111"/>
+              <circle cx="6" cy="-2" r="3" fill="#111"/>
+              <path d="M-6 8 Q0 14 6 8" stroke="#111" stroke-width="2" fill="none"/>
+            </g>
+          </g>
+          <rect x="${W*0.67-28}" y="${H*0.58-46}" width="56" height="20" rx="8" fill="#f5d0fe"/>
+          <text x="${W*0.67}" y="${H*0.58-32}" text-anchor="middle" fill="#4c1d95" font-size="12" font-weight="700">WELCOME</text>
+        `)
+      }
+    ];
+
+    function baseScene(draw){
+      const W = 900, H = 520; // fixed drawing plane, scales to fit
+      return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Comic art panel">${draw({W,H})}</svg>`;
+    }
+
+    // --- App logic ---
+    const panel = document.getElementById('panel');
+    const caption = document.getElementById('caption');
+    const pageLabel = document.getElementById('pageLabel');
+    const dots = document.getElementById('dots');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    let index = 0;
+
+    function render(){
+      const p = pages[index];
+      panel.innerHTML = p.art();
+      caption.innerHTML = `<strong>${p.title}</strong> — ${p.caption}`;
+      pageLabel.textContent = `${index+1} / ${pages.length}`;
+      dots.querySelectorAll('.dot').forEach((d,i)=>{
+        d.classList.toggle('active', i===index);
+      });
+      // manage focus for accessibility
+      (index===0?prevBtn:nextBtn).setAttribute('aria-disabled', index===0);
+    }
+
+    // build dots
+    pages.forEach((_,i)=>{
+      const d = document.createElement('div'); d.className='dot';
+      d.addEventListener('click',()=>{ index=i; render(); });
+      dots.appendChild(d);
+    });
+
+    // controls
+    prevBtn.addEventListener('click', ()=>{ index=(index-1+pages.length)%pages.length; render(); });
+    nextBtn.addEventListener('click', ()=>{ index=(index+1)%pages.length; render(); });
+
+    // keyboard nav
+    window.addEventListener('keydown', e=>{
+      if(e.key==='ArrowRight') { index=(index+1)%pages.length; render(); }
+      if(e.key==='ArrowLeft')  { index=(index-1+pages.length)%pages.length; render(); }
+    });
+
+    // touch swipe
+    let startX=null; 
+    panel.addEventListener('touchstart', e=>{ startX = e.touches[0].clientX; }, {passive:true});
+    panel.addEventListener('touchend', e=>{
+      if(startX==null) return; const dx = e.changedTouches[0].clientX - startX; startX=null; 
+      if(Math.abs(dx) < 40) return; // ignore small moves
+      if(dx<0) { index=(index+1)%pages.length; } else { index=(index-1+pages.length)%pages.length; }
+      render();
+    });
+
+    // init
+    render();
+  </script>
+</body>
+</html>

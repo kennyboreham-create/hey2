@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Thalor </title>
+  <style>
+    :root{
+      --bg:#0b0f1a;        /* starry-night */
+      --fg:#eef2ff;        /* soft white */
+      --accent:#8b5cf6;    /* velari purple */
+      --muted:#94a3b8;     /* slate */
+      --btn:#111827;       /* button base */
+      --btnHover:#1f2937;  /* button hover */
+      --panel:#0f172a;     /* panel bg */
+      --shadow: 0 20px 40px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Helvetica, Arial, sans-serif;
+      background: radial-gradient(1200px 600px at 70% 20%, #0f1b2f 0%, var(--bg) 60%);
+      color:var(--fg);
+      display:grid; place-items:center;
+    }
+    .app{
+      width:min(1000px, 96vw);
+      height:min(680px, 92vh);
+      background:linear-gradient(180deg, #0b1324 0%, #0b0f1a 100%);
+      border:1px solid #1e293b; border-radius:24px; box-shadow:var(--shadow);
+      display:grid; grid-template-rows:auto 1fr auto; overflow:hidden;
+    }
+    header{
+      padding:18px 22px; display:flex; align-items:center; justify-content:space-between;
+      border-bottom:1px solid #1e293b; background:rgba(15,23,42,.6); backdrop-filter: blur(6px);
+    }
+    header h1{font-size:clamp(18px, 2.6vw, 26px); margin:0; letter-spacing:.5px}
+    header .meta{font-size:14px; color:var(--muted)}
+
+    .stage{
+      position:relative; overflow:hidden; background:var(--panel);
+      display:grid; grid-template-columns: 72px 1fr 72px; align-items:stretch;
+    }
+    .panel{
+      position:relative; padding:0; display:grid; place-items:center; overflow:hidden;
+    }
+    .panel svg{width:100%; height:100%; display:block; background:#05070f}
+
+    .navBtn{
+      display:grid; place-items:center; cursor:pointer; border:none; outline:3px solid transparent;
+      background:transparent; color:var(--fg); transition: .2s ease transform, .2s ease background;
+    }
+    .navBtn:hover{background:rgba(255,255,255,.04)}
+    .navBtn:active{transform:scale(.96)}
+
+    .navBtn .chev{
+      width:52px; height:52px; border-radius:16px; display:grid; place-items:center; border:1px solid #263147;
+      background:linear-gradient(180deg, #0b1222, #0b0f1a); box-shadow: inset 0 0 0 1px rgba(255,255,255,.04);
+    }
+    .navBtn svg{width:28px; height:28px}
+
+    footer{
+      padding:14px 20px; display:flex; align-items:center; justify-content:space-between; gap:12px;
+      border-top:1px solid #1e293b; background:rgba(15,23,42,.6); backdrop-filter: blur(6px);
+      font-size:15px;
+    }
+    .caption{color:#cbd5e1}
+    .pageDots{display:flex; gap:6px; align-items:center; flex-wrap:wrap}
+    .dot{
+      width:9px; height:9px; border-radius:50%; background:#263147; transition:transform .2s ease, background .2s ease;
+    }
+    .dot.active{background:var(--accent); transform:scale(1.35)}
+    .pageLabel{color:var(--muted); font-variant-numeric: tabular-nums}
+
+    .kbd{font: 600 12px ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; padding:2px 6px; border-radius:6px; border:1px solid #334155; background:#0b1222; color:#e2e8f0}
+
+    /* Small screens */
+    @media (max-width:720px){
+      .stage{grid-template-columns: 56px 1fr 56px}
+      .navBtn .chev{width:44px; height:44px}
+      .navBtn svg{width:22px; height:22px}
+      footer{font-size:14px}
+    }
+  </style>
+  <audio id="dreamer-audio" src="images/sound1comic2.mp3"></audio>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+  <div class="app" aria-live="polite">
+    <header>
+      <h1>Thalor: Rise of the Warlord</h1>
+     
+      <div class="meta"><i class="fa-solid fa-star-of-life velarian-icon fa-2x"></i></div>
+    </header>
+
+    <section class="stage" id="stage">
+      <button class="navBtn" id="prevBtn" aria-label="Previous page">
+        <div class="chev" aria-hidden="true"> 
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15 5L8 12L15 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </button>
+
+      <figure class="panel" id="panel" aria-label="Comic panel" role="group"></figure>
+
+      <button class="navBtn" id="nextBtn" aria-label="Next page">
+        <div class="chev" aria-hidden="true"> 
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 5L16 12L9 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </button>
+    </section>
+
+    <footer>
+      <div class="caption" id="caption">Loading…</div>
+          <button id="toggle-sound" style="
+             
+              padding: 10px 20px;
+              font-size: 16px;
+              background-color: #4f46e5;
+              color: white;
+              border: none;
+              border-radius: 8px;
+              cursor: pointer;
+              z-index: 1000;
+              ">
+        🔊 Play Sound
+        </button>
+        <button id="read-text" style="
+  
+          padding: 10px 20px;
+          font-size: 16px;
+          background-color: #10b981;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          cursor: pointer;
+          z-index: 1000;
+        ">
+          🗣️ Read Aloud
+        </button>
+
+
+
+
+
+
+      <div style="display:flex; align-items:center; gap:12px;">
+        <div class="pageDots" id="dots" aria-hidden="true"></div>
+        <div class="pageLabel" id="pageLabel">1 / 12</div>
+      </div>
+   
+    </footer>
+  </div>
+
+  <script>
+   const audio = document.getElementById('dreamer-audio');
+const button = document.getElementById('toggle-sound');
+
+button.addEventListener('click', () => {
+  if (audio.paused) {
+    audio.play();
+    button.textContent = '⏹️ Stop Sound';
+  } else {
+    audio.pause();
+    audio.currentTime = 0; // Reset to beginning
+    button.textContent = '🔊 Play Sound';
+  }
+});
+
+    // --- Simple starfield generator reused across scenes ---
+    function makeStars(count, w, h){
+      const rnd = n=> Math.random()*n;
+      let stars = '';
+      for(let i=0;i<count;i++){
+        const x = rnd(w).toFixed(1);
+        const y = rnd(h).toFixed(1);
+        const r = (Math.random()*1.4+0.3).toFixed(2);
+        const o = (Math.random()*0.8+0.2).toFixed(2);
+        stars += `<circle cx="${x}" cy="${y}" r="${r}" fill="white" opacity="${o}"/>`;
+      }
+      return stars;
+    }
+
+    // --- Character and prop snippets (SVG fragments) ---
+    const Ava = (x,y,scale=1)=>`
+      <g transform="translate(${x} ${y}) scale(${scale})">
+        <circle cx="0" cy="0" r="18" fill="#ffd9a6"/>
+        <circle cx="-6" cy="-2" r="2" fill="#111"/>
+        <circle cx="6" cy="-2" r="2" fill="#111"/>
+        <path d="M-7 7 Q0 13 7 7" stroke="#111" stroke-width="2" fill="none"/>
+        <path d="M-20 -10 Q0 -26 20 -10" fill="#ff4d6d"/>
+      </g>`;
+
+    const Max = (x,y,scale=1)=>`
+      <g transform="translate(${x} ${y}) scale(${scale})">
+        <rect x="-16" y="-16" width="32" height="32" rx="6" fill="#ffd9a6"/>
+        <circle cx="-6" cy="-4" r="2" fill="#111"/>
+        <circle cx="6" cy="-4" r="2" fill="#111"/>
+        <path d="M-8 8 Q0 14 8 8" stroke="#111" stroke-width="2" fill="none"/>
+        <path d="M-20 -18 h40 v10 h-40z" fill="#22c55e"/>
+      </g>`;
+
+    const Ship = (x, y, scale = 1) => {
+  const width = 100 * scale;
+  const height = 100 * scale;
+  return `<img src="images/shipcomic2.png" style="position:absolute; left:${x}px; top:${y}px; width:${width}px; height:${height}px;">`;
+};
+
+const Earth = (x, y, scale = 1) => {
+  const width = 100 * scale;
+  const height = 100 * scale;
+  return `<img src="images/earthcomic2.png" style="position:absolute; left:${x}px; top:${y}px; width:${width}px; height:${height}px;">`;
+};
+
+    const Velari = (x,y,r=110)=>`
+      <g transform="translate(${x} ${y})">
+        <defs>
+          <radialGradient id="vCore" cx="50%" cy="40%" r="60%">
+            <stop offset="0%" stop-color="#c084fc"/>
+            <stop offset="60%" stop-color="#8b5cf6"/>
+            <stop offset="100%" stop-color="#5b21b6"/>
+          </radialGradient>
+        </defs>
+        <circle cx="0" cy="0" r="${r}" fill="url(#vCore)"/>
+        <g opacity=".25" fill="#fff">
+          <ellipse cx="-20" cy="-20" rx="${r*0.7}" ry="${r*0.18}" fill="#d8b4fe"/>
+          <ellipse cx="30" cy="10" rx="${r*0.55}" ry="${r*0.14}" fill="#a78bfa"/>
+        </g>
+      </g>`;
+
+    const Jelly = (x,y,scale=1)=>`
+      <g transform="translate(${x} ${y}) scale(${scale})">
+        <path d="M0 -20 C 20 -40, 40 -10, 30 10 C 25 25, -25 25, -30 10 C -40 -10, -20 -40, 0 -20" fill="#60a5fa" opacity=".8"/>
+        <g stroke="#60a5fa" stroke-width="2" fill="none" opacity=".9">
+          <path d="M-15 20 C -15 35, -25 45, -30 55"/>
+          <path d="M-5 22 C -5 37, -10 48, -14 58"/>
+          <path d="M 5 22 C 5 38, 12 50, 16 60"/>
+          <path d="M 15 20 C 15 36, 25 48, 30 58"/>
+        </g>
+        <circle cx="-6" cy="-8" r="2" fill="#111"/>
+        <circle cx="6" cy="-8" r="2" fill="#111"/>
+      </g>`;
+
+    const Rock = (x,y,s)=>`<ellipse cx="${x}" cy="${y}" rx="${s}" ry="${s*0.7}" fill="#64748b"/>`;
+
+    // --- Scenes (12 pages) ---
+const pages = [
+  {
+    title: "Page 1",
+    caption: "Dreamer",
+    art: () => baseScene(({W, H}) => `
+      <rect width="100%" height="100%" fill="#070b14"/>
+      <image href="images/tlp1.png" x="0" y="0" width="${W/2}" height="${H}" />
+      <foreignObject x="${W/2 + 40}" y="60" width="${W/2 - 80}" height="${H - 120}">
+        <div xmlns="http://www.w3.org/1999/xhtml"
+             style="color:#e2e8f0;font-size:22px;font-weight:700;line-height:1.8;word-wrap:break-word;">
+          ${pageText.page1}
+        </div>
+      </foreignObject>
+    `)
+  },
+  {
+    title: "Page 2",
+    caption: "Forbidden Curiosity",
+    art: () => baseScene(({W, H}) => `
+      <rect width="100%" height="100%" fill="#070b14"/>
+      <image href="images/tlp2.png" x="0" y="0" width="${W/2}" height="${H}" />
+      <foreignObject x="${W/2 + 40}" y="60" width="${W/2 - 80}" height="${H - 120}">
+        <div xmlns="http://www.w3.org/1999/xhtml"
+             style="color:#e2e8f0;font-size:22px;font-weight:700;line-height:1.8;word-wrap:break-word;">
+          ${pageText.page2}
+        </div>
+      </foreignObject>
+    `)
+  },
+  {
+    title: "Page 3",
+    caption: "The Crystal Shard",
+    art: () => baseScene(({W, H}) => `
+      <rect width="100%" height="100%" fill="#070b14"/>
+      <image href="images/tlp3.png" x="0" y="0" width="${W/2}" height="${H}" />
+      <foreignObject x="${W/2 + 40}" y="60" width="${W/2 - 80}" height="${H - 120}">
+        <div xmlns="http://www.w3.org/1999/xhtml"
+             style="color:#e2e8f0;font-size:22px;font-weight:700;line-height:1.8;word-wrap:break-word;">
+          ${pageText.page3}
+        </div>
+      </foreignObject>
+    `)
+  },
+  {
+    title: "Page 4",
+    caption: "Visions",
+    art: () => baseScene(({W, H}) => `
+      <rect width="100%" height="100%" fill="#070b14"/>
+      <image href="images/tlp4.png" x="0" y="0" width="${W/2}" height="${H}" />
+      <foreignObject x="${W/2 + 40}" y="60" width="${W/2 - 80}" height="${H - 120}">
+        <div xmlns="http://www.w3.org/1999/xhtml"
+             style="color:#e2e8f0;font-size:22px;font-weight:700;line-height:1.8;word-wrap:break-word;">
+          ${pageText.page4}
+        </div>
+      </foreignObject>
+    `)
+  },
+  {
+    title: "Page 5",
+    caption: "Mist and Memory",
+    art: () => baseScene(({W, H}) => `
+      <rect width="100%" height="100%" fill="#070b14"/>
+      <image href="images/tlp5.png" x="0" y="0" width="${W/2}" height="${H}" />
+      <foreignObject x="${W/2 + 40}" y="60" width="${W/2 - 80}" height="${H - 120}">
+        <div xmlns="http://www.w3.org/1999/xhtml"
+             style="color:#e2e8f0;font-size:22px;font-weight:700;line-height:1.8;word-wrap:break-word;">
+          ${pageText.page5}
+        </div>
+      </foreignObject>
+    `)
+  },
+  {
+    title: "Page 6",
+    caption: "The Voice",
+    art: () => baseScene(({W, H}) => `
+      <rect width="100%" height="100%" fill="#070b14"/>
+      <image href="images/tlp6.png" x="0" y="0" width="${W/2}" height="${H}" />
+      <foreignObject x="${W/2 + 40}" y="60" width="${W/2 - 80}" height="${H - 120}">
+        <div xmlns="http://www.w3.org/1999/xhtml"
+             style="color:#e2e8f0;font-size:22px;font-weight:700;line-height:1.8;word-wrap:break-word;">
+          ${pageText.page6}
+        </div>
+      </foreignObject>
+    `)
+  },
+  {
+    title: "Page 7",
+    caption: "Changed",
+    art: () => baseScene(({W, H}) => `
+      <rect width="100%" height="100%" fill="#070b14"/>
+      <image href="images/tlp7.png" x="0" y="0" width="${W/2}" height="${H}" />
+      <foreignObject x="${W/2 + 40}" y="60" width="${W/2 - 80}" height="${H - 120}">
+        <div xmlns="http://www.w3.org/1999/xhtml"
+             style="color:#e2e8f0;font-size:22px;font-weight:700;line-height:1.8;word-wrap:break-word;">
+          ${pageText.page7}
+        </div>
+      </foreignObject>
+    `)
+  },
+  {
+    title: "Page 8",
+    caption: "Awakening",
+    art: () => baseScene(({W, H}) => `
+      <rect width="100%" height="100%" fill="#070b14"/>
+      <image href="images/tlp8.png" x="0" y="0" width="${W/2}" height="${H}" />
+      <foreignObject x="${W/2 + 40}" y="60" width="${W/2 - 80}" height="${H - 120}">
+        <div xmlns="http://www.w3.org/1999/xhtml"
+             style="color:#e2e8f0;font-size:22px;font-weight:700;line-height:1.8;word-wrap:break-word;">
+          ${pageText.page8}
+        </div>
+      </foreignObject>
+    `)
+  },
+  {
+    title: "Page 9",
+    caption: "The Mirror",
+    art: () => baseScene(({W, H}) => `
+      <rect width="100%" height="100%" fill="#070b14"/>
+      <image href="images/tlp9.png" x="0" y="0" width="${W/2}" height="${H}" />
+      <foreignObject x="${W/2 + 40}" y="60" width="${W/2 - 80}" height="${H - 120}">
+        <div xmlns="http://www.w3.org/1999/xhtml"
+             style="color:#e2e8f0;font-size:22px;font-weight:700;line-height:1.8;word-wrap:break-word;">
+          ${pageText.page9}
+        </div>
+      </foreignObject>
+    `)
+  },
+  {
+    title: "Page 10",
+    caption: "The Storm Within",
+    art: () => baseScene(({W, H}) => `
+      <rect width="100%" height="100%" fill="#070b14"/>
+      <image href="images/tlp10.png" x="0" y="0" width="${W/2}" height="${H}" />
+      <foreignObject x="${W/2 + 40}" y="60" width="${W/2 - 80}" height="${H - 120}">
+        <div xmlns="http://www.w3.org/1999/xhtml"
+             style="color:#e2e8f0;font-size:22px;font-weight:700;line-height:1.8;word-wrap:break-word;">
+          ${pageText.page10}
+        </div>
+      </foreignObject>
+    `)
+  },
+  {
+    title: "Page 11",
+    caption: "Chosen",
+    art: () => baseScene(({W, H}) => `
+      <rect width="100%" height="100%" fill="#070b14"/>
+      <image href="images/tlp11.png" x="0" y="0" width="${W/2}" height="${H}" />
+      <foreignObject x="${W/2 + 40}" y="60" width="${W/2 - 80}" height="${H - 120}">
+        <div xmlns="http://www.w3.org/1999/xhtml"
+             style="color:#e2e8f0;font-size:22px;font-weight:700;line-height:1.8;word-wrap:break-word;">
+          ${pageText.page11}
+        </div>
+      </foreignObject>
+    `)
+  },
+  {
+    title: "Page 12",
+    caption: "Witch of the Hollow Veil",
+    art: () => baseScene(({W, H}) => `
+      <rect width="100%" height="100%" fill="#070b14"/>
+      <image href="images/tlp12.png" x="0" y="0" width="${W/2}" height="${H}" />
+      <foreignObject x="${W/2 + 40}" y="60" width="${W/2 - 80}" height="${H - 120}">
+        <div xmlns="http://www.w3.org/1999/xhtml"
+             style="color:#e2e8f0;font-size:22px;font-weight:700;line-height:1.8;word-wrap:break-word;">
+          ${pageText.page12}
+        </div>
+      </foreignObject>
+    `)
+  }
+];
+
+
+
+
+  
+      
+    
+
+    function baseScene(draw){
+      const W = 900, H = 520; // fixed drawing plane, scales to fit
+      return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Comic art panel">${draw({W,H})}</svg>`;
+    }
+
+    // --- App logic ---
+    const panel = document.getElementById('panel');
+    const caption = document.getElementById('caption');
+    const pageLabel = document.getElementById('pageLabel');
+    const dots = document.getElementById('dots');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    let index = 0;
+
+    function render(){
+      const p = pages[index];
+      panel.innerHTML = p.art();
+      caption.innerHTML = `<strong>${p.title}</strong> — ${p.caption}`;
+      pageLabel.textContent = `${index+1} / ${pages.length}`;
+      dots.querySelectorAll('.dot').forEach((d,i)=>{
+        d.classList.toggle('active', i===index);
+      });
+      // manage focus for accessibility
+      (index===0?prevBtn:nextBtn).setAttribute('aria-disabled', index===0);
+    }
+
+    // build dots
+    pages.forEach((_,i)=>{
+      const d = document.createElement('div'); d.className='dot';
+      d.addEventListener('click',()=>{ index=i; render(); });
+      dots.appendChild(d);
+    });
+
+    // controls
+    prevBtn.addEventListener('click', ()=>{ index=(index-1+pages.length)%pages.length; render(); });
+    nextBtn.addEventListener('click', ()=>{ index=(index+1)%pages.length; render(); });
+
+    // keyboard nav
+    window.addEventListener('keydown', e=>{
+      if(e.key==='ArrowRight') { index=(index+1)%pages.length; render(); }
+      if(e.key==='ArrowLeft')  { index=(index-1+pages.length)%pages.length; render(); }
+    });
+
+  function wrapText(text, maxCharsPerLine = 40) {
+  const words = text.split(' ');
+  const lines = [];
+  let currentLine = '';
+
+  for (const word of words) {
+    if ((currentLine + word).length <= maxCharsPerLine) {
+      currentLine += word + ' ';
+    } else {
+      lines.push(currentLine.trim());
+      currentLine = word + ' ';
+    }
+  }
+  if (currentLine) lines.push(currentLine.trim());
+  return lines;
+}
+
+    // touch swipe
+    let startX=null; 
+    panel.addEventListener('touchstart', e=>{ startX = e.touches[0].clientX; }, {passive:true});
+    panel.addEventListener('touchend', e=>{
+      if(startX==null) return; const dx = e.changedTouches[0].clientX - startX; startX=null; 
+      if(Math.abs(dx) < 40) return; // ignore small moves
+      if(dx<0) { index=(index+1)%pages.length; } else { index=(index-1+pages.length)%pages.length; }
+      render();
+    });
+
+  const pageText = {
+  page1: "In the shadowed caverns of Zorath, Thalor hatched beneath the watchful eyes of the Elders. His scales shimmered with a rare cobalt hue, an omen of destiny.",
+  page2: "At age five, Thalor faced his first trial: the Fang Pit. Armed only with a bone dagger, he battled a wild razorbeast. He emerged victorious, earning his first scar, and respect.",
+  page3: "The Zorathian rite of passage demanded walking across volcanic stone. Thalor stepped forward without hesitation. His feet blistered, but he never cried out. The Elders marked him with ash.",
+  page4: "Under Master Vek’s brutal training, Thalor learned the twin blades of Zorath. Each strike was punished, each mistake corrected with pain. But his form grew precise, his reflexes sharp.",
+  page5: "Thalor was sent into the jungle alone to hunt a shadow panther. Days passed. When he returned, he carried its skull and wore its pelt. He had learned patience, silence, and relience.",
+  page6: "A fellow trainee, jealous of Thalor’s rise, poisoned his water. Thalor survived, but barely. He confronted the traitor not with rage, but with cold precision, and left him broken in the sand.",
+  page7: "The High Elder summoned Thalor to the Obsidian Spire. There, he faced illusions of his deepest fears: failure, exile, weakness. He roared through them, shattering the visions with will alone.",
+  page8: "Zorath was attacked by the rival red scaled Drakari. Thalor, still a youth, rallied the younglings and led a counterstrike. His tactics were brutal, his courage unmatched. The Drakari fled.",
+  page9: "In the aftermath, Thalor bore a jagged wound across his chest. He refused healing salves. 'Let it mark me,' he said. 'Let it speak for those who cannot.' The tribe began to chant his name.",
+  page10: "To earn his warrior crest, Thalor had to leap from the Sky Fang cliffs and land on the back of a flying raptor. He missed once. Twice. On the third leap, he soared, and the beast bowed.",
+  page11: "Before the tribe, the Elders declared: 'Thalor, son of fire and fang, bearer of the storm crest, you are no longer a trainee. You are Zorathian.' The crowd roared. His eyes burned with pride.",
+  page12: "Thalor stood atop the obsidian ridge, watching the stars. 'I will not be a warrior,' he whispered. 'I will be the warlord.' And beneath the twin moons, the wind carried his vow across Zorath."
+};
+
+
+
+
+
+document.getElementById('read-text').addEventListener('click', () => {
+  const ind = index + 1;
+ const text = pageText["page"+ind]; 
+   const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 1;
+    utterance.pitch = 1;
+    console.log(ind);
+    speechSynthesis.speak(utterance);
+});
+
+    // init
+    render();
+  </script>
+</body>
+</html>

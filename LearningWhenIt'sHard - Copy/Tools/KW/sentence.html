@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Threx's Mythic Words</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #0b3d91; /* Dark blue */
+      border: 10px solid black;
+      height: 100vh;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+    }
+
+    /* Left-side navbar */
+    .navbar {
+      width: 150px;
+      background-color: #fff;
+      border-right: 5px solid black;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 20px;
+    }
+
+    .navbar img {
+      width: 100px;
+      height: auto;
+      border: 4px solid black;
+      border-radius: 10px;
+    }
+
+    /* Main content area */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 40px 20px;
+      color: white;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    input {
+      font-size: 18px;
+      padding: 10px;
+      width: 300px;
+      border-radius: 5px;
+      border: 2px solid white;
+      margin-bottom: 10px;
+    }
+
+    button {
+      font-size: 18px;
+      padding: 10px 20px;
+      background-color: white;
+      color: #0b3d91;
+      border: 2px solid black;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: transform 0.2s, background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #ffe066;
+      transform: scale(1.05);
+    }
+
+    #output {
+      font-size: 20px;
+      margin-bottom: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="navbar">
+    <img src="../../characters/images/gryphon1.png" alt="Cool Icon">
+    <br><br>
+    <a href="../../index.html">HOME</a><br><br>
+    <a href="../../reading.html">READING</a>
+  </div>
+
+  <div class="main">
+    <div>
+      <h1>Type a Word</h1>
+      <input type="text" id="wordInput" placeholder="Enter a word...">
+      <br>
+      <button onclick="generateSentence()">Find New Words</button>
+    </div>
+
+    <div id="output"></div>
+  </div>
+
+  <script>
+  
+   
+async function generateSentence() {
+  const word = document.getElementById("wordInput").value.trim();
+  const output = document.getElementById("output");
+
+  if (!word) {
+    output.textContent = "";
+    alert("Please enter a word first.");
+    return;
+  }
+
+  try {
+    const response = await fetch(`https://api.datamuse.com/words?ml=${word}&max=5`);
+    const data = await response.json();
+
+    if (data.length > 0) {
+      const related = data.map(item => item.word).slice(0, 3).join(", ");
+      output.textContent = `The word "${word}" brings to mind: ${related}.`;
+    } else {
+      output.textContent = `The word "${word}" is truly one of a kind.`;
+    }
+  } catch (error) {
+    output.textContent = "Oops! Something went wrong.";
+    console.error(error);
+  }
+}
+
+
+async function generateSentence() {
+  const word = document.getElementById("wordInput").value.trim();
+  const output = document.getElementById("output");
+
+  if (!word) {
+    output.textContent = "";
+    alert("Please enter a word first.");
+    return;
+  }
+
+  try {
+    const response = await fetch(`https://api.datamuse.com/words?ml=${word}&max=5`);
+    const data = await response.json();
+
+    let sentence = "";
+
+    if (data.length > 0) {
+      const related = data.map(item => item.word).slice(0, 3).join(", ");
+      sentence = `The word "${word}" brings to mind: ${related}.`;
+    } else {
+      sentence = `The word "${word}" is truly one of a kind.`;
+    }
+
+    output.textContent = sentence;
+
+    // 🔊 Speak the full sentence
+    const utterance = new SpeechSynthesisUtterance(sentence);
+    speechSynthesis.speak(utterance);
+
+  } catch (error) {
+    output.textContent = "Oops! Something went wrong.";
+    console.error(error);
+  }
+}async function generateSentence() {
+  const word = document.getElementById("wordInput").value.trim();
+  const output = document.getElementById("output");
+
+  if (!word) {
+    output.textContent = "";
+    alert("Please enter a word first.");
+    return;
+  }
+
+  try {
+    const response = await fetch(`https://api.datamuse.com/words?ml=${word}&max=5`);
+    const data = await response.json();
+
+    let sentence = "";
+
+    if (data.length > 0) {
+      const related = data.map(item => item.word).slice(0, 3).join(", ");
+      sentence = `The word "${word}" brings to mind: ${related}.`;
+    } else {
+      sentence = `The word "${word}" is truly one of a kind.`;
+    }
+
+    output.textContent = sentence;
+
+    // 🔊 Speak the full sentence
+    const utterance = new SpeechSynthesisUtterance(sentence);
+    speechSynthesis.speak(utterance);
+
+  } catch (error) {
+    output.textContent = "Oops! Something went wrong.";
+    console.error(error);
+  }
+}
+
+</script>
+  
+
+</body>
+</html>

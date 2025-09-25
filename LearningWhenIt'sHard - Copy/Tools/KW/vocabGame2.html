@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mivra's Vocabulary Challenge 2</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; margin-top: 80px; background: goldenrod; }
+    .question { font-size: 24px; margin-bottom: 20px; }
+    button { padding: 12px 20px; margin: 8px; font-size: 18px; cursor: pointer; }
+    #result { font-size: 20px; margin-top: 20px; font-weight: bold; color: #0077cc; }
+  </style>
+</head>
+<body>
+  <h1>Mivra's Vocabulary Game 2</h1>
+  <div class="question" id="questionText">What does the word “honest” mean?</div>
+  <div id="choices">
+    <button onclick="checkAnswer('A')">A. Not telling the truth</button>
+    <button onclick="checkAnswer('B')">B. Telling the truth</button>
+    <button onclick="checkAnswer('C')">C. Running fast</button>
+  </div>
+  <div id="result"></div>
+
+  <script>
+  const questions = [
+  { word: "eager", correct: "A", options: { A: "Excited and ready", B: "Very tired", C: "Not interested" } },
+  { word: "clumsy", correct: "C", options: { A: "Very graceful", B: "Strong and fast", C: "Likely to trip or fall" } },
+  { word: "loyal", correct: "B", options: { A: "Untrustworthy", B: "Faithful and devoted", C: "Always changing sides" } },
+  { word: "mysterious", correct: "A", options: { A: "Hard to understand", B: "Very clear", C: "Funny and silly" } },
+  { word: "greedy", correct: "C", options: { A: "Generous", B: "Always sharing", C: "Wanting more than needed" } },
+  { word: "alert", correct: "B", options: { A: "Sleeping", B: "Watchful and aware", C: "Distracted" } },
+  { word: "harsh", correct: "A", options: { A: "Rough or severe", B: "Gentle and kind", C: "Soft and quiet" } },
+  { word: "tidy", correct: "C", options: { A: "Messy", B: "Sticky", C: "Neat and clean" } },
+  { word: "lazy", correct: "A", options: { A: "Not wanting to work", B: "Very active", C: "Always helping" } },
+  { word: "bold", correct: "B", options: { A: "Shy and quiet", B: "Brave and confident", C: "Easily scared" } },
+  { word: "gentle", correct: "C", options: { A: "Very loud", B: "Extremely strong", C: "Soft and kind" } },
+  { word: "rough", correct: "A", options: { A: "Not smooth", B: "Very clean", C: "Quiet and calm" } },
+  { word: "curious", correct: "B", options: { A: "Not interested", B: "Eager to learn", C: "Always tired" } },
+  { word: "moody", correct: "C", options: { A: "Always cheerful", B: "Very sleepy", C: "Changing emotions often" } },
+  { word: "sharp", correct: "A", options: { A: "Able to cut easily", B: "Very dull", C: "Soft and round" } },
+  { word: "proud", correct: "B", options: { A: "Ashamed", B: "Feeling good about something", C: "Very quiet" } },
+  { word: "sneaky", correct: "C", options: { A: "Very honest", B: "Always loud", C: "Trying not to be seen" } },
+  { word: "strong", correct: "A", options: { A: "Having power", B: "Very weak", C: "Always tired" } },
+  { word: "wild", correct: "B", options: { A: "Very calm", B: "Untamed or uncontrolled", C: "Always sleeping" } },
+  { word: "wise", correct: "C", options: { A: "Very silly", B: "Always joking", C: "Showing good judgment" } }
+];
+
+    let currentLevel = 0;
+
+    function loadQuestion() {
+      const q = questions[currentLevel];
+      document.getElementById("questionText").textContent = `What does the word “${q.word}” mean?`;
+      const choicesDiv = document.getElementById("choices");
+      choicesDiv.innerHTML = "";
+      for (const key in q.options) {
+        const btn = document.createElement("button");
+        btn.textContent = `${key}. ${q.options[key]}`;
+        btn.onclick = () => checkAnswer(key);
+        choicesDiv.appendChild(btn);
+      }
+    }
+
+    function checkAnswer(choice) {
+      const q = questions[currentLevel];
+      const result = document.getElementById("result");
+      if (choice === q.correct) {
+        result.textContent = "🎉 Correct!";
+        currentLevel++;
+        if (currentLevel < questions.length) {
+          setTimeout(() => {
+            result.textContent = "";
+            loadQuestion();
+          }, 1000);
+        } else {
+          result.textContent = "🏆 You've completed all levels of Mivra's Vocab Game 2!";
+        }
+      } else {
+        result.textContent = "❌ Try again.";
+      }
+    }
+
+    // Load the first question
+    loadQuestion();
+  </script>
+</body>
+</html>

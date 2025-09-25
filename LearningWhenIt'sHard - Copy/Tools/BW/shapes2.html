@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Counting Game</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #2e004d;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      padding: 20px;
+    }
+
+    #gameInfo {
+      width: 150px;
+    }
+
+    #gameArea {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #shapesContainer {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+      justify-content: center;
+    }
+
+    .shape {
+      width: 40px;
+      height: 40px;
+    }
+
+    .circle {
+      background-color: #ffcc00;
+      border-radius: 50%;
+    }
+
+    .square {
+      background-color: #00ccff;
+    }
+
+    #numberPanel {
+      width: 150px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .numberBtn {
+      width: 40px;
+      height: 40px;
+      background-color: #9933ff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    #message {
+      margin-top: 10px;
+      font-size: 18px;
+      color: #66ff66;
+    }
+  </style>
+</head>
+<body>
+  <div id="gameInfo">
+    <h3>Level: <span id="level">1</span></h3>
+    <h3>Points: <span id="points">0</span></h3>
+  </div>
+
+  <div id="gameArea">
+    <h1>Count the Shapes!</h1>
+    <div id="shapesContainer"></div>
+    <div id="message"></div>
+  </div>
+
+  <div id="numberPanel"></div>
+
+  <script>
+    let level = 1;
+    let points = 0;
+    let correctAnswer = 0;
+
+    function generateShapes() {
+  const container = document.getElementById('shapesContainer');
+  container.innerHTML = '';
+
+  const maxCircles = 10;
+  const maxSquares = 10;
+
+  const circles = Math.floor(Math.random() * maxCircles + 1); // 1 to 10
+  const squares = Math.floor(Math.random() * maxSquares + 1); // 1 to 10
+
+  correctAnswer = circles + squares;
+
+  for (let i = 0; i < circles; i++) {
+    const shape = document.createElement('div');
+    shape.className = 'shape circle';
+    container.appendChild(shape);
+  }
+
+  for (let i = 0; i < squares; i++) {
+    const shape = document.createElement('div');
+    shape.className = 'shape square';
+    container.appendChild(shape);
+  }
+
+  document.getElementById('message').textContent = '';
+}
+
+    function setupNumberPanel() {
+      const panel = document.getElementById('numberPanel');
+      panel.innerHTML = '';
+      for (let i = 1; i <= 20; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'numberBtn';
+        btn.textContent = i;
+        btn.onclick = () => checkAnswer(i);
+        panel.appendChild(btn);
+      }
+    }
+
+    function checkAnswer(selected) {
+      const message = document.getElementById('message');
+      if (selected === correctAnswer) {
+        points += 10;
+        level++;
+        message.textContent = "Correct! 🎉";
+      } else {
+        message.textContent = "Try again!";
+      }
+
+      document.getElementById('points').textContent = points;
+      document.getElementById('level').textContent = level <= 15 ? level : "🏆";
+
+      if (level <= 15) {
+        setTimeout(generateShapes, 1000);
+      } else {
+        message.textContent = "Game Over! You completed all levels!";
+      }
+    }
+
+    // Initialize game
+    setupNumberPanel();
+    generateShapes();
+  </script>
+</body>
+</html>

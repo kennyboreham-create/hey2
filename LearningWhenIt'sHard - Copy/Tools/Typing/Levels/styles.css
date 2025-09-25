@@ -1,0 +1,113 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-image: url('../img/background.jpg'); /* Add your image URL */
+    background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    
+    align-items: center;
+	flex: 1; /* Push the footer to the bottom */
+}
+
+.box {
+    width: 30%;
+    height: 100px;
+    margin: 10px;
+     background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+
+.keyboard {
+            display: grid;
+            grid-template-columns: repeat(10, 50px);
+            gap: 5px;
+            max-width: 650px;
+            margin: auto;
+        }
+        .key {
+            width: 50px;
+            height: 50px;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .key:active {
+            background-color: #ddd;
+        }
+
+	.pressBack {
+	background-color: lightblue;
+	}
+
+.small-line {
+    width: 80%;
+    border: 1px solid #000; /* Black line for contrast */
+    margin-top: 10px;
+}
+
+.footer {
+  text-align: center;
+  padding: 10px;
+  background-color: #333;
+  color: white;
+}
+ 
+ .button-container {
+            display: flex; /* Use flexbox */
+            justify-content: center; /* Optional: Align buttons horizontally */
+            gap: 10px; /* Add space between buttons */
+        }
+
+.sidebar {
+    height: 100%;
+    width: 200px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    padding-top: 20px;
+    overflow-y: auto; /* Allows scrolling if content exceeds height */
+}
+
+.sidebar a {
+    padding: 15px 25px;
+    text-decoration: none;
+    font-size: 18px;
+    color: white;
+    display: block;
+}
+
+.sidebar a:hover {
+    background-color: #575757;
+}
+
+/* Submenu styling */
+.submenu {
+    padding-left: 15px; /* Indent submenu items */
+}
+
+.submenu a {
+    font-size: 16px; /* Slightly smaller font for submenu */
+    padding: 10px 25px;
+}
