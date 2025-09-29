@@ -190,6 +190,27 @@
         }
       }
 
+        grid.addEventListener("touchstart", e => {
+  const touch = e.touches[0];
+  const target = document.elementFromPoint(touch.clientX, touch.clientY);
+  if (target && target.classList.contains("cell")) {
+    selectedCells = [target];
+    target.classList.add("selected");
+  }
+});
+
+grid.addEventListener("touchend", () => {
+  if (selectedCells.length > 0) {
+    const selectedWord = selectedCells.map(c => c.textContent).join("");
+    if (words.includes(selectedWord)) {
+      selectedCells.forEach(c => c.classList.remove("selected"));
+      selectedCells.forEach(c => c.classList.add("found"));
+      for (let li of wordList) {
+        if (li.textContent === selectedWord) {
+          li.classList.add("found");
+        }
+      }
+
       // ✅ Check if all words are found
       let foundCount = 0;
       for (let li of wordList) {
